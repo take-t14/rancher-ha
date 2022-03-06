@@ -1,0 +1,38 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+require_relative 'vagrant_rancheros_guest_plugin.rb'
+require 'ipaddr'
+require 'yaml'
+
+if File.exists?(File.join(File.dirname(__FILE__), "local_config.yaml")) then
+    puts "Using local configuration file"
+    x = YAML.load_file(File.join(File.dirname(__FILE__), "local_config.yaml"))
+else
+    x = YAML.load_file(File.join(File.dirname(__FILE__), 'config.yaml'))
+end
+puts "Config: #{x.inspect}\n\n"
+
+Vagrant.configure(2) do |config|
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+     config.proxy.enabled = { docker: false }
+  end
+  node_ip = IPAddr.new(x.fetch('ip').fetch('node'))
+  (1..x.fetch('node').fetch('count')).each do |i|
+    c = x.fetch('node')
+    hostname = x.fetch('hostname')
+    hostname = "#{hostname}-%02d" % i
+    config.vm.define hostname do |node|
+      node.vm.box   = "chrisurwin/RancherOS"
+      node.vm.box_version = x.fetch('ROS_version')
+      node.vm.guest = :linux
+      node.vm.provider "virtualbox" do |v|
+        v.cpus = c.fetch('cpus')
+        v.linked_clone = true if Gem::Version.new(Vagrant::VERSION) >= Gem::Version.new('1.8.0') and x.fetch('linked_clones')
+        v.memory = c.fetch('memory')
+        v.name = hostname
+      end
+      node.vm.network x.fetch('net').fetch('network_type'), ip: IPAddr.new(node_ip.to_i + i - 1, Socket::AF_INET).to_s, bridge: "en0: Wi-Fi (Wireless)"
+      node.vm.hostname = hostname
+    end
+  end
+end

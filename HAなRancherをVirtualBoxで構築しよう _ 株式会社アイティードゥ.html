@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<!-- saved from url=(0068)http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/ -->
+<html lang="ja" prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#" class="csstransforms csstransforms3d csstransitions fontawesome-i2svg-active fontawesome-i2svg-complete"><script src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/sdk.js" async="" crossorigin="anonymous"></script><script id="twitter-wjs" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/widgets.js"></script><script id="facebook-jssdk" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/sdk(1).js"></script><script id="tinyhippos-injected">if (window.top.ripple) { window.top.ripple("bootstrap").inject(window, document); }</script><head itemscope="" itemtype="https://schema.org/WebSite"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">svg:not(:root).svg-inline--fa{overflow:visible}.svg-inline--fa{display:inline-block;font-size:inherit;height:1em;overflow:visible;vertical-align:-.125em}.svg-inline--fa.fa-lg{vertical-align:-.225em}.svg-inline--fa.fa-w-1{width:.0625em}.svg-inline--fa.fa-w-2{width:.125em}.svg-inline--fa.fa-w-3{width:.1875em}.svg-inline--fa.fa-w-4{width:.25em}.svg-inline--fa.fa-w-5{width:.3125em}.svg-inline--fa.fa-w-6{width:.375em}.svg-inline--fa.fa-w-7{width:.4375em}.svg-inline--fa.fa-w-8{width:.5em}.svg-inline--fa.fa-w-9{width:.5625em}.svg-inline--fa.fa-w-10{width:.625em}.svg-inline--fa.fa-w-11{width:.6875em}.svg-inline--fa.fa-w-12{width:.75em}.svg-inline--fa.fa-w-13{width:.8125em}.svg-inline--fa.fa-w-14{width:.875em}.svg-inline--fa.fa-w-15{width:.9375em}.svg-inline--fa.fa-w-16{width:1em}.svg-inline--fa.fa-w-17{width:1.0625em}.svg-inline--fa.fa-w-18{width:1.125em}.svg-inline--fa.fa-w-19{width:1.1875em}.svg-inline--fa.fa-w-20{width:1.25em}.svg-inline--fa.fa-pull-left{margin-right:.3em;width:auto}.svg-inline--fa.fa-pull-right{margin-left:.3em;width:auto}.svg-inline--fa.fa-border{height:1.5em}.svg-inline--fa.fa-li{width:2em}.svg-inline--fa.fa-fw{width:1.25em}.fa-layers svg.svg-inline--fa{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.fa-layers{display:inline-block;height:1em;position:relative;text-align:center;vertical-align:-.125em;width:1em}.fa-layers svg.svg-inline--fa{-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter,.fa-layers-text{display:inline-block;position:absolute;text-align:center}.fa-layers-text{left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter{background-color:#ff253a;border-radius:1em;-webkit-box-sizing:border-box;box-sizing:border-box;color:#fff;height:1.5em;line-height:1;max-width:5em;min-width:1.5em;overflow:hidden;padding:.25em;right:0;text-overflow:ellipsis;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-bottom-right{bottom:0;right:0;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom right;transform-origin:bottom right}.fa-layers-bottom-left{bottom:0;left:0;right:auto;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom left;transform-origin:bottom left}.fa-layers-top-right{right:0;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-top-left{left:0;right:auto;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top left;transform-origin:top left}.fa-lg{font-size:1.3333333333em;line-height:.75em;vertical-align:-.0667em}.fa-xs{font-size:.75em}.fa-sm{font-size:.875em}.fa-1x{font-size:1em}.fa-2x{font-size:2em}.fa-3x{font-size:3em}.fa-4x{font-size:4em}.fa-5x{font-size:5em}.fa-6x{font-size:6em}.fa-7x{font-size:7em}.fa-8x{font-size:8em}.fa-9x{font-size:9em}.fa-10x{font-size:10em}.fa-fw{text-align:center;width:1.25em}.fa-ul{list-style-type:none;margin-left:2.5em;padding-left:0}.fa-ul>li{position:relative}.fa-li{left:-2em;position:absolute;text-align:center;width:2em;line-height:inherit}.fa-border{border:solid .08em #eee;border-radius:.1em;padding:.2em .25em .15em}.fa-pull-left{float:left}.fa-pull-right{float:right}.fa.fa-pull-left,.fab.fa-pull-left,.fal.fa-pull-left,.far.fa-pull-left,.fas.fa-pull-left{margin-right:.3em}.fa.fa-pull-right,.fab.fa-pull-right,.fal.fa-pull-right,.far.fa-pull-right,.fas.fa-pull-right{margin-left:.3em}.fa-spin{-webkit-animation:fa-spin 2s infinite linear;animation:fa-spin 2s infinite linear}.fa-pulse{-webkit-animation:fa-spin 1s infinite steps(8);animation:fa-spin 1s infinite steps(8)}@-webkit-keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.fa-rotate-90{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.fa-rotate-180{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.fa-rotate-270{-webkit-transform:rotate(270deg);transform:rotate(270deg)}.fa-flip-horizontal{-webkit-transform:scale(-1,1);transform:scale(-1,1)}.fa-flip-vertical{-webkit-transform:scale(1,-1);transform:scale(1,-1)}.fa-flip-horizontal.fa-flip-vertical{-webkit-transform:scale(-1,-1);transform:scale(-1,-1)}:root .fa-flip-horizontal,:root .fa-flip-vertical,:root .fa-rotate-180,:root .fa-rotate-270,:root .fa-rotate-90{-webkit-filter:none;filter:none}.fa-stack{display:inline-block;height:2em;position:relative;width:2.5em}.fa-stack-1x,.fa-stack-2x{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.svg-inline--fa.fa-stack-1x{height:1em;width:1.25em}.svg-inline--fa.fa-stack-2x{height:2em;width:2.5em}.fa-inverse{color:#fff}.sr-only{border:0;clip:rect(0,0,0,0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.sr-only-focusable:active,.sr-only-focusable:focus{clip:auto;height:auto;margin:0;overflow:visible;position:static;width:auto}</style><link rel="profile" href="http://gmpg.org/xfn/11">
+    <link rel="pingback" href="http://c.itdo.jp/xmlrpc.php">
+    <title>HAなRancherをVirtualBoxで構築しよう | 株式会社アイティードゥ</title>
+
+		<!-- All in One SEO 4.1.5.3 -->
+		<meta name="description" content="KubernetesをGUIで管理できるOSS、RancherをVirtualBoxで構築する全手順を公開しています。">
+		<meta name="robots" content="max-image-preview:large">
+		<link rel="canonical" href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/">
+		<meta name="google" content="nositelinkssearchbox">
+		<script type="application/ld+json" class="aioseo-schema">
+			{"@context":"https:\/\/schema.org","@graph":[{"@type":"WebSite","@id":"http:\/\/c.itdo.jp\/#website","url":"http:\/\/c.itdo.jp\/","name":"\u682a\u5f0f\u4f1a\u793e\u30a2\u30a4\u30c6\u30a3\u30fc\u30c9\u30a5","description":"\u4f1a\u793e\u7d39\u4ecb\u304a\u3088\u3073\u6280\u8853\u60c5\u5831\u516c\u958b","inLanguage":"ja","publisher":{"@id":"http:\/\/c.itdo.jp\/#organization"}},{"@type":"Organization","@id":"http:\/\/c.itdo.jp\/#organization","name":"\u682a\u5f0f\u4f1a\u793e\u30a2\u30a4\u30c6\u30a3\u30fc\u30c9\u30a5","url":"http:\/\/c.itdo.jp\/","logo":{"@type":"ImageObject","@id":"http:\/\/c.itdo.jp\/#organizationLogo","url":"http:\/\/c.itdo.jp\/wp-content\/uploads\/2018\/05\/ITDO_LOGO_20100519_itdo_SW-e1526956275523.png","width":300,"height":169},"image":{"@id":"http:\/\/c.itdo.jp\/#organizationLogo"}},{"@type":"BreadcrumbList","@id":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/#breadcrumblist","itemListElement":[{"@type":"ListItem","@id":"http:\/\/c.itdo.jp\/#listItem","position":1,"item":{"@type":"WebPage","@id":"http:\/\/c.itdo.jp\/","name":"\u30db\u30fc\u30e0","description":"\u4f1a\u793e\u7d39\u4ecb\u304a\u3088\u3073\u6280\u8853\u60c5\u5831\u516c\u958b","url":"http:\/\/c.itdo.jp\/"},"nextItem":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/#listItem"},{"@type":"ListItem","@id":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/#listItem","position":2,"item":{"@type":"WebPage","@id":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/","name":"HA\u306aRancher\u3092VirtualBox\u3067\u69cb\u7bc9\u3057\u3088\u3046","description":"Kubernetes\u3092GUI\u3067\u7ba1\u7406\u3067\u304d\u308bOSS\u3001Rancher\u3092VirtualBox\u3067\u69cb\u7bc9\u3059\u308b\u5168\u624b\u9806\u3092\u516c\u958b\u3057\u3066\u3044\u307e\u3059\u3002","url":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/"},"previousItem":"http:\/\/c.itdo.jp\/#listItem"}]},{"@type":"Person","@id":"http:\/\/c.itdo.jp\/author\/saito-y\/#author","url":"http:\/\/c.itdo.jp\/author\/saito-y\/","name":"\u9f4a\u85e4\u52c7\u8cb4","image":{"@type":"ImageObject","@id":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/#authorImage","url":"http:\/\/0.gravatar.com\/avatar\/0a63634d080789e80bc34a8a91e19a8d?s=96&d=mm&r=g","width":96,"height":96,"caption":"\u9f4a\u85e4\u52c7\u8cb4"}},{"@type":"WebPage","@id":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/#webpage","url":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/","name":"HA\u306aRancher\u3092VirtualBox\u3067\u69cb\u7bc9\u3057\u3088\u3046 | \u682a\u5f0f\u4f1a\u793e\u30a2\u30a4\u30c6\u30a3\u30fc\u30c9\u30a5","description":"Kubernetes\u3092GUI\u3067\u7ba1\u7406\u3067\u304d\u308bOSS\u3001Rancher\u3092VirtualBox\u3067\u69cb\u7bc9\u3059\u308b\u5168\u624b\u9806\u3092\u516c\u958b\u3057\u3066\u3044\u307e\u3059\u3002","inLanguage":"ja","isPartOf":{"@id":"http:\/\/c.itdo.jp\/#website"},"breadcrumb":{"@id":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/#breadcrumblist"},"author":"http:\/\/c.itdo.jp\/author\/saito-y\/#author","creator":"http:\/\/c.itdo.jp\/author\/saito-y\/#author","datePublished":"2020-06-16T06:12:22+09:00","dateModified":"2020-06-17T05:34:12+09:00"},{"@type":"Article","@id":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/#article","name":"HA\u306aRancher\u3092VirtualBox\u3067\u69cb\u7bc9\u3057\u3088\u3046 | \u682a\u5f0f\u4f1a\u793e\u30a2\u30a4\u30c6\u30a3\u30fc\u30c9\u30a5","description":"Kubernetes\u3092GUI\u3067\u7ba1\u7406\u3067\u304d\u308bOSS\u3001Rancher\u3092VirtualBox\u3067\u69cb\u7bc9\u3059\u308b\u5168\u624b\u9806\u3092\u516c\u958b\u3057\u3066\u3044\u307e\u3059\u3002","inLanguage":"ja","headline":"HA\u306aRancher\u3092VirtualBox\u3067\u69cb\u7bc9\u3057\u3088\u3046","author":{"@id":"http:\/\/c.itdo.jp\/author\/saito-y\/#author"},"publisher":{"@id":"http:\/\/c.itdo.jp\/#organization"},"datePublished":"2020-06-16T06:12:22+09:00","dateModified":"2020-06-17T05:34:12+09:00","articleSection":"Docker\/Kubernetes, Docker, Helm, Istio, K8s, Kubernetes, Rancher, \u65e5\u672c\u8a9e, 54ce8998-0ac1-4ba6-9842-d6077ab2c708","mainEntityOfPage":{"@id":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/#webpage"},"isPartOf":{"@id":"http:\/\/c.itdo.jp\/technical-information\/docker-kubernetes\/ha-rancher\/#webpage"},"image":{"@type":"ImageObject","@id":"http:\/\/c.itdo.jp\/#articleImage","url":"http:\/\/c.itdo.jp\/wp-content\/uploads\/2020\/06\/image.png","width":1262,"height":1015}}]}
+		</script>
+		<script type="text/javascript">
+			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+			ga('create', "UA-8890687-1", 'auto');
+			ga('send', 'pageview');
+		</script>
+		<script async="" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/analytics.js"></script>
+		<!-- All in One SEO -->
+
+<script type="text/javascript">                function apbct_attach_event_handler__backend(elem, event, callback){                    if(typeof window.addEventListener === "function") elem.addEventListener(event, callback);                    else                                              elem.attachEvent(event, callback);                }                apbct_attach_event_handler__backend(window, 'load', function(){                    if (typeof ctSetCookie === "function")                        ctSetCookie('ct_checkjs', '865335611' );                    else                         console.log('APBCT ERROR: apbct-public--functions is not loaded.');                });    </script><link rel="dns-prefetch" href="http://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="株式会社アイティードゥ » フィード" href="http://c.itdo.jp/feed/">
+<link rel="alternate" type="application/rss+xml" title="株式会社アイティードゥ » コメントフィード" href="http://c.itdo.jp/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="株式会社アイティードゥ » HAなRancherをVirtualBoxで構築しよう のコメントのフィード" href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/feed/">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/13.1.0\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/c.itdo.jp\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.8.3"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([10084,65039,8205,55357,56613],[10084,65039,8203,55357,56613])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/wp-emoji-release.min.js" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	
+		<style>
+		.wc_apbct_email_id {
+			display: none !important;
+		}
+		</style><link rel="stylesheet" id="sb_instagram_styles-css" href="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/sbi-styles.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="wp-block-library-css" href="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/style.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="contact-form-7-css" href="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/styles.css" type="text/css" media="all">
+<link rel="stylesheet" id="rara-theme-toolkit-profontawesome-css" href="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/font-awesome.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="rara-theme-toolkit-pro-css" href="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/rara-theme-toolkit-pro-public.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="rara-theme-toolkit-prolightslider-css" href="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/lightslider.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="rara-theme-toolkit-prolightsidr-css" href="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/jquery.sidr.light.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="lawyer-landing-page-pro-google-fonts-css" href="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/css" type="text/css" media="all">
+<link rel="stylesheet" id="lawyer-landing-page-pro-css" href="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="jquery-fancybox-css" href="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/jquery.fancybox.min.css" type="text/css" media="all">
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/jquery.min.js" id="jquery-core-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/jquery-migrate.min.js" id="jquery-migrate-js"></script>
+<script type="text/javascript" id="ct_public_functions-js-extra">
+/* <![CDATA[ */
+var ctPublicFunctions = {"_ajax_nonce":"efc393b583","_rest_nonce":"c8dcb247a2","_ajax_url":"\/wp-admin\/admin-ajax.php","_rest_url":"http:\/\/c.itdo.jp\/index.php?rest_route=\/","_apbct_ajax_url":"http:\/\/c.itdo.jp\/wp-content\/plugins\/cleantalk-spam-protect\/lib\/Cleantalk\/ApbctWP\/Ajax.php","data__cookies_type":"native","data__ajax_type":"custom_ajax"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/apbct-public--functions.min.js" id="ct_public_functions-js"></script>
+<script type="text/javascript" id="ct_public-js-extra">
+/* <![CDATA[ */
+var ctPublic = {"pixel__setting":"0","pixel__enabled":"","pixel__url":null,"data__email_check_before_post":"1","data__cookies_type":"native"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/apbct-public.min.js" id="ct_public-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/cleantalk-modal.min.js" id="cleantalk-modal-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/odometer.min.js" id="odometer-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/waypoint.min.js" id="waypoint-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/rara-theme-toolkit-pro-public.min.js" id="rara-theme-toolkit-pro-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/jquery.isotope.min.js" id="isotope-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/rttk-portfolio-isotope.min.js" id="rttk-portfolio-isotope-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/lightslider.min.js" id="lightslider-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/settings.min.js" id="rttk-portfolio-settings-js"></script>
+<link rel="https://api.w.org/" href="http://c.itdo.jp/wp-json/"><link rel="alternate" type="application/json" href="http://c.itdo.jp/wp-json/wp/v2/posts/2928"><link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://c.itdo.jp/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://c.itdo.jp/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.8.3">
+<link rel="shortlink" href="http://c.itdo.jp/?p=2928">
+<link rel="alternate" type="application/json+oembed" href="http://c.itdo.jp/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fc.itdo.jp%2Ftechnical-information%2Fdocker-kubernetes%2Fha-rancher%2F">
+<link rel="alternate" type="text/xml+oembed" href="http://c.itdo.jp/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fc.itdo.jp%2Ftechnical-information%2Fdocker-kubernetes%2Fha-rancher%2F&amp;format=xml">
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/"
+    },
+    "headline": "HAなRancherをVirtualBoxで構築しよう",
+    "datePublished": "2020-06-16T15:12:22+0900",
+    "dateModified": "2020-06-17T14:34:12+0900",
+    "author": {
+        "@type": "Person",
+        "name": "齊藤勇貴"
+    },
+    "description": "KubernetesをGUIで管理できるOSS、RancherをVirtualBoxで構築する全手順を公開しています。",
+    "publisher": {
+        "@type": "Organization",
+        "name": "株式会社アイティードゥ",
+        "description": "会社紹介および技術情報公開",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "http://c.itdo.jp/wp-content/uploads/2018/05/ITDO_LOGO_20100519_itdo_SW-e1526956275523.png",
+            "width": 300,
+            "height": 169
+        }
+    }
+}
+</script>
+<meta property="og:title" content="HAなRancherをVirtualBoxで構築しよう">
+<meta property="og:type" content="article">
+<meta property="og:image" content="http://c.itdo.jp/wp-content/uploads/2020/06/image.png">
+<meta property="og:url" content="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/">
+<meta property="og:description" content="KubernetesをGUIで管理できるOSS、RancherをVirtualB … ">
+<meta property="og:locale" content="ja">
+<meta property="og:site_name" content="株式会社アイティードゥ">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Helm">
+<meta property="article:tag" content="Istio">
+<meta property="article:tag" content="K8s">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="Rancher">
+<meta property="article:section" content="Docker/Kubernetes">
+<meta property="article:published_time" content="2020-06-16T15:12:22+09:00">
+<meta property="article:modified_time" content="2020-06-17T14:34:12+09:00">
+<meta property="article:author" content="http://c.itdo.jp/author/saito-y/">
+<link rel="icon" href="http://c.itdo.jp/wp-content/uploads/2018/12/itdo_logo_48x48_blue.png" sizes="32x32">
+<link rel="icon" href="http://c.itdo.jp/wp-content/uploads/2018/12/itdo_logo_48x48_blue.png" sizes="192x192">
+<link rel="apple-touch-icon" href="http://c.itdo.jp/wp-content/uploads/2018/12/itdo_logo_48x48_blue.png">
+<meta name="msapplication-TileImage" content="http://c.itdo.jp/wp-content/uploads/2018/12/itdo_logo_48x48_blue.png">
+<style type="text/css" media="all">    
+    body,
+    button,
+    input,
+    select,
+    textarea{
+    	font-size: 16px;
+    	line-height: 24px;
+    	color: #757575;
+    	font-family: Raleway;
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    body{
+        background: url() #ffffff;
+    }
+    
+    #primary .post .entry-content h1,
+    #primary .page .entry-content h1{
+        font-family: Raleway;
+        font-size: 48px;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 58px;
+        color: #353d47;
+    }
+    
+    #primary .post .entry-content h2,
+    #primary .page .entry-content h2{
+        font-family: Raleway;
+        font-size: 40px;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 48px;
+        color: #353d47;
+    }
+    
+    #primary .post .entry-content h3,
+    #primary .page .entry-content h3{
+        font-family: Raleway;
+        font-size: 32px;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 38px;
+        color: #353d47;
+    }
+    
+    #primary .post .entry-content h4,
+    #primary .page .entry-content h4{
+        font-family: Raleway;
+        font-size: 28px;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 34px;
+        color: #353d47;
+    }
+    
+    #primary .post .entry-content h5,
+    #primary .page .entry-content h5{
+        font-family: Raleway;
+        font-size: 24px;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 29px;
+        color: #353d47;
+    }
+    
+    #primary .post .entry-content h6,
+    #primary .page .entry-content h6{
+        font-family: Raleway;
+        font-size: 22px;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 26px;
+        color: #353d47;
+    }
+    
+    /* primary color */
+    a{
+    	color: #168dd2;
+    }
+    
+    a:hover,
+    a:focus{
+    	color: #168dd2;
+    }
+
+    .site-header .site-branding .site-description,
+    .site-header .header-t .social-networks li a,
+    .site-header .header-t .tools .tel-link,
+    .main-navigation a,
+    .about .header .title,
+    .about .text-holder .sub-title a:hover,
+    .about .text-holder .sub-title a:focus,
+    .practice-area .header .title,
+    .practice-area .box .sub-title a:hover,
+    .practice-area .box .sub-title a:focus,
+    .why-us .box .text-holder .sub-title a:hover,
+    .why-us .box .text-holder .sub-title a:focus,
+    .services-section .header .title,
+    .services-section .services-holder .sub-title,
+    .testimonial .header .title,
+    .portfolio-section .header .title,
+    .testimonial #carousel li .designation em,
+    .team .header .title,
+    .team .col .designation,
+    .faq .header .title,
+    .faq .col .question a:hover,
+    .faq .col .question a:focus,
+    .blog-section .header .title,
+    .blog-section .post .entry-header .entry-title a:hover,
+    .blog-section .post .entry-header .entry-title a:focus,
+    .clients .header .title,
+    .about-page .about-us-holder .right h2,
+    .about-page h2.title,
+    .about-page .practice-areas .box .sub-title a:hover,
+    .about-page .practice-areas .box .sub-title a:focus,
+    #crumbs a:hover,
+    #crumbs a:focus,
+    .error-holder h1,
+    .search #primary article .entry-header .entry-title a:hover,
+    .search #primary article .entry-header .entry-title a:focus,
+    #primary .post .entry-header .entry-meta .posted-on:before,
+    #primary .post .entry-header .entry-meta .tag-links:before,
+    #primary .post .entry-header .entry-meta .cat-links:before,
+    #primary .post .entry-header .entry-meta .comments-link:before,
+    #primary .post .entry-header .entry-meta .byline:before,
+    #primary .post .entry-header .entry-title a:hover,
+    #primary .post .entry-header .entry-title a:focus,
+    .search #primary .page .entry-header .entry-title a:hover,
+    .search #primary .page .entry-header .entry-title a:focus,
+    .contact-page .right-panel .contact-info .text a,
+    #secondary .widget ul li a,
+    .site-header .site-branding .site-title a,
+    .team-page .team-holder .social-networks li a:hover,
+    .team-page .team-holder .social-networks li a:focus,
+    .services-page .services-holder .sub-title a,
+    .site-header.header-2 .phone .tel-link,
+    .site-header.header-3 .header-t .tel-link:hover,
+    .site-header.header-3 .header-t .tel-link:focus,
+    #search-btn,
+    .site-header.header-3 .header-b .main-navigation .current_page_item > a,
+    .site-header.header-3 .header-b .main-navigation .current-menu-item > a,
+    .site-header.header-3 .header-b .main-navigation .current_page_ancestor > a,
+    .site-header.header-3 .header-b .main-navigation .current-menu-ancestor > a,
+    .site-header.header-5 .secondary-nav ul li a:hover,
+    .site-header.header-5 .secondary-nav ul li a:focus,
+    .site-header.header-5 .secondary-nav ul .current-menu-item > a,
+    .site-header.header-5 .secondary-nav ul .current-menu-ancestor > a,
+    .site-header.header-5 .secondary-nav ul .current_page_item > a,
+    .site-header.header-5 .secondary-nav ul .current_page_ancestor > a,
+    .site-header.header-5 .header-t .right .phone .tel-link:hover,
+    .site-header.header-5 .header-t .right .phone .tel-link:focus,
+    .site-header.header-8 .header-top-bar .secondary-nav ul li a:hover,
+    .site-header.header-8 .header-top-bar .secondary-nav ul li a:focus,
+    .site-header.header-8 .header-top-bar .secondary-nav ul li:hover > a,
+    .site-header.header-8 .header-top-bar .secondary-nav ul li:focus > a,
+    .site-header.header-8 .header-top-bar .secondary-nav ul .current-menu-item > a,
+    .site-header.header-8 .header-top-bar .secondary-nav ul .current-menu-ancestor > a,
+    .site-header.header-8 .header-top-bar .secondary-nav ul .current_page_item > a,
+    .site-header.header-8 .header-top-bar .secondary-nav ul .current_page_ancestor > a,
+    .site-header.header-8 .header-t .right .phone .tel-link:hover,
+    .site-header.header-8 .header-t .right .phone .tel-link:focus,
+    .site-header.header-9 .header-t .phone .tel-link:hover,
+    .site-header.header-9 .header-t .phone .tel-link:focus,
+    .site-footer .widget.widget_rttk_pro_icon_text_widget .icon-holder,
+    .single-team .col .team-info .social-networks li a:hover,
+    .single-team .col .team-info .social-networks li a:focus,
+    .home .contact .header .title,
+    .about-page .header .title,
+    .widget_rttk_pro_icon_text_widget .widget-title a:hover,
+    .widget_rttk_pro_icon_text_widget .widget-title a:focus,
+    .comments-area .comment-list .comment-body .comment-metadata a:hover,
+    #secondary .widget_rttk_pro_stat_counter_widget .col .icon-holder,
+    .mobile-header .site-branding .site-description,
+    .mobile-main-navigation ul li a:hover,
+    .mobile-main-navigation ul li a:focus,
+    .mobile-main-navigation ul li:hover > a,
+    .mobile-main-navigation ul li:focus > a,
+    .mobile-main-navigation ul .current-menu-item > a,
+    .mobile-main-navigation ul .current-menu-ancestor > a,
+    .mobile-main-navigation ul .current_page_item > a,
+    .mobile-main-navigation ul .current_page_ancestor > a,
+    .mobile-secondary-nav ul li a:hover,
+    .mobile-secondary-nav ul li a:focus,
+    .mobile-secondary-nav ul li:hover > a,
+    .mobile-secondary-nav ul li:focus a,
+    .mobile-secondary-nav ul .current-menu-item > a,
+    .mobile-secondary-nav ul .current-menu-ancestor a,
+    .mobile-secondary-nav ul .current_page_item > a,
+    .mobile-secondary-nav ul .current_page_ancestor > a,
+    .mobile-menu .tel-link:hover,
+    .mobile-menu .tel-link:focus{
+        color: #168dd2;
+    }
+
+    .mobile-menu .widget_rttk_social_links ul li a{
+        border-color: #168dd2;
+        color: #168dd2;
+    }
+
+    .mobile-menu .widget_rttk_social_links ul li a:hover,
+    .mobile-menu .widget_rttk_social_links ul li a:focus{
+        background: #168dd2;
+    }
+
+    .site-header .header-t .social-networks li a,
+    .rara_toggle,
+    #primary .entry-content .rara_tab_wrap .rara_tab_group .tab-title,
+    #primary .post .entry-content .rara_accordian, #primary .page .entry-content .rara_accordian{
+        border-color: #168dd2;
+    }
+
+    .banner .wpcf7,
+    .banner .quote-form,
+    #secondary .widget.widget_rttk_pro_icon_text_widget .icon-holder{
+        background: #168dd2;
+    }
+
+    .site-header .header-t .social-networks li a:hover,
+    .site-header .header-t .social-networks li a:focus,
+    .portfolio-holder .col .img-holder .text-holder a,
+    .site-header.header-2 .header-b,
+    .site-header.header-2 .header-b .main-navigation ul ul,
+    .site-header.header-3 .header-b .main-navigation ul li:after,
+    .site-header.header-7 .header-top-bar,
+    .site-header.header-7 .secondary-nav ul ul,
+    .site-header.header-8 .header-b,
+    .site-header.header-8 .header-b .main-navigation ul ul,
+    .site-header.header-9 .header-b,
+    .site-header.header-9 .header-b .main-navigation ul ul,
+    .comments-area .comment-list .comment-body .reply a,
+    .rara_toggle .rara_toggle_title,
+    #primary .entry-content .rara_call_to_action_button,
+    #primary .entry-content .rara_tab_wrap .rara_tab_group .tab-title.active,
+    #primary .entry-content .rara_tab_wrap .rara_tab_group .tab-title:hover,
+    #primary .entry-content .rara_tab_wrap .rara_tab_group .tab-title:focus,
+    #primary .post .entry-content .rara_accordian .rara_accordian_title,
+    #primary .page .entry-content .rara_accordian .rara_accordian_title{
+        background: #168dd2;
+    }
+
+    .sc-panel:after{
+        background: rgba(22, 141, 210, 0.4);    }
+
+    .portfolio-holder .col .img-holder .text-holder,
+    .team .col .img-holder .text-holder{
+        background: rgba(22, 141, 210, 0.85);    }
+
+    .site-header .header-b .search-form input[type="submit"],
+    .widget.widget_search .search-form input[type="submit"],
+    .search #primary .search-form input[type="submit"]{
+        background-color: #168dd2;
+    }
+
+    .widget.widget_tag_cloud .tagcloud a:hover,
+    .widget.widget_tag_cloud .tagcloud a:focus{
+        background: #168dd2;
+        border-color: #168dd2;
+    }
+
+    .site-header.header-2 .phone .tel-link:hover,
+    .site-header.header-2 .phone .tel-link:focus{
+        color: #168dd2;
+        opacity: 0.7;
+    }
+
+    /*secondary color*/
+    button,
+    input[type="button"],
+    input[type="reset"],
+    input[type="submit"],
+    .promotional-block .btn-contact,
+    .blog-section .btn-holder a,
+    .search #primary article .entry-footer .btn-readmore,
+    #primary .post .entry-footer .btn-readmore,
+    .search #primary .page .entry-footer .btn-readmore,
+    .site-header.header-2 .header-t .btn-request,
+    .site-header.header-3 .header-t .btn-request,
+    .site-header.header-4 .header-t .btn-request,
+    .site-header.header-4 .main-navigation ul li a:hover,
+    .site-header.header-4 .main-navigation ul li a:focus,
+    .site-header.header-4 .main-navigation ul li:hover > a,
+    .site-header.header-4 .main-navigation ul li:focus > a,
+    .site-header.header-4 .main-navigation ul .current-menu-item > a,
+    .site-header.header-4 .main-navigation ul .current-menu-ancestor > a,
+    .site-header.header-4 .main-navigation ul .current_page_item > a,
+    .site-header.header-4 .main-navigation ul .current_page_ancestor > a,
+    .site-header.header-5 .header-t .right .btn-request,
+    .site-header.header-7 .header-b .main-navigation ul li a:hover,
+    .site-header.header-7 .header-b .main-navigation ul li a:focus,
+    .site-header.header-7 .header-b .main-navigation ul li:hover > a,
+    .site-header.header-7 .header-b .main-navigation ul li:focus > a,
+    .site-header.header-7 .header-b .main-navigation ul .current-menu-item > a,
+    .site-header.header-7 .header-b .main-navigation ul .current-menu-ancestor > a,
+    .site-header.header-7 .header-b .main-navigation ul .current_page_item > a,
+    .site-header.header-7 .header-b .main-navigation ul .current_page_ancestor > a,
+    .site-header.header-8 .header-t .btn-request,
+    .site-header.header-9 .header-t .col .btn-request,
+    .site-header.header-9 .header-b .main-navigation ul li a:before,
+    .services-section .btn-holder a,
+    .portfolio-section .btn-holder a,
+    .testimonial .btn-holder a,
+    .faq .btn-holder a,
+    .team .btn-holder a,
+    .bslider .banner-text .text-holder .btn,
+    #load-posts a{
+        background: #fa9d00;
+    }
+
+    .mobile-header .btn-request{
+        background: #fa9d00;
+        border-color: #fa9d00;
+    }
+
+    .mobile-header .btn-request:hover,
+    .mobile-header .btn-request:focus{
+        color: #fa9d00;
+    }
+
+    .banner .wpcf7 input[type="submit"]:hover,
+    .banner .quote-form input[type="submit"]:hover,
+    .promotional-block .btn-contact:hover,
+    .promotional-block .btn-contact:focus,
+    .blog-section .btn-holder a:hover,
+    .blog-section .btn-holder a:focus,
+    button:hover,
+    input[type="button"]:hover,
+    input[type="reset"]:hover,
+    input[type="submit"]:hover,
+    .search #primary article .entry-footer .btn-readmore:hover,
+    .search #primary article .entry-footer .btn-readmore:focus,
+    #primary .post .entry-footer .btn-readmore:hover,
+    #primary .post .entry-footer .btn-readmore:focus,
+    .search #primary .page .entry-footer .btn-readmore:hover,
+    .search #primary .page .entry-footer .btn-readmore:focus,
+    .site-header.header-2 .header-t .btn-request:hover,
+    .site-header.header-2 .header-t .btn-request:focus,
+    .site-header.header-3 .header-t .btn-request:hover,
+    .site-header.header-3 .header-t .btn-request:focus,
+    .site-header.header-4 .header-t .btn-request:hover,
+    .site-header.header-4 .header-t .btn-request:focus,
+    .site-header.header-5 .header-t .right .btn-request:hover,
+    .site-header.header-5 .header-t .right .btn-request:focus,
+    .site-header.header-8 .header-t .btn-request:hover,
+    .site-header.header-8 .header-t .btn-request:focus,
+    .site-header.header-9 .header-t .col .btn-request:hover,
+    .site-header.header-9 .header-t .col .btn-request:focus,
+    .services-section .btn-holder a:hover,
+    .services-section .btn-holder a:focus,
+    .portfolio-section .btn-holder a:hover,
+    .portfolio-section .btn-holder a:focus,
+    .testimonial .btn-holder a:hover,
+    .testimonial .btn-holder a:focus,
+    .faq .btn-holder a:hover,
+    .faq .btn-holder a:focus,
+    .team .btn-holder a:hover,
+    .team .btn-holder a:focus{
+        background: #fa9d00;
+        opacity: 0.8;
+    }
+
+    .site-header.header-3 .header-t .tel-link:before,
+    .site-header.header-4 .header-top-bar .secondary-nav ul li a:hover,
+    .site-header.header-4 .header-top-bar .secondary-nav ul li a:focus,
+    .site-header.header-4 .header-top-bar .secondary-nav ul li:hover > a,
+    .site-header.header-4 .header-top-bar .secondary-nav ul li:focus > a,
+    .site-header.header-4 .header-top-bar .secondary-nav ul .current_page_item > a,
+    .site-header.header-4 .header-top-bar .secondary-nav ul .current_page_ancestor > a,
+    .site-header.header-4 .header-top-bar .secondary-nav ul .current-menu-item > a,
+    .site-header.header-4 .header-top-bar .secondary-nav ul .current-menu-ancestor > a,
+    .site-header.header-4 .header-t .phone span,
+    .site-header.header-5 .header-t .right .phone:before,
+    .site-header.header-6 .main-navigation ul li a:hover,
+    .site-header.header-6 .main-navigation ul li a:focus,
+    .site-header.header-6 .main-navigation ul li:hover > a,
+    .site-header.header-6 .main-navigation ul li:focus > a,
+    .site-header.header-6 .main-navigation ul .current-menu-item > a,
+    .site-header.header-6 .main-navigation ul .current-menu-ancestor > a,
+    .site-header.header-6 .main-navigation ul .current_page_item > a,
+    .site-header.header-6 .main-navigation ul .current_page_ancestor > a,
+    .site-header.header-7 .secondary-nav ul li a:hover,
+    .site-header.header-7 .secondary-nav ul li a:focus,
+    .site-header.header-7 .secondary-nav ul li:hover > a,
+    .site-header.header-7 .secondary-nav ul li:focus > a,
+    .site-header.header-7 .secondary-nav ul .current-menu-item > a,
+    .site-header.header-7 .secondary-nav ul .current-menu-ancestor > a,
+    .site-header.header-7 .secondary-nav ul .current_page_item > a,
+    .site-header.header-7 .secondary-nav ul .current_page_ancestor > a,
+    .site-header.header-7 .header-t .tel-link:hover,
+    .site-header.header-7 .header-t .tel-link:focus,
+    .site-header.header-8 .header-t .right .phone:before,
+    .site-header.header-9 .header-t .phone .tel-link,
+    .site-header.header-9 .header-t .email .email-link,
+    .portfolio-holder .button-group .is-checked{
+        color: #fa9d00;
+    }
+
+    .site-header.header-7 .header-t .btn-request,
+    .portfolio-holder .button-group button{
+        border-color: #fa9d00;
+    }
+
+    .site-header.header-7 .header-t .btn-request:hover,
+    .site-header.header-7 .header-t .btn-request:focus{
+        background: #fa9d00;
+    }
+
+    .blog-section .post .entry-header .posted-on a:before{
+        background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="%23168dd2" d="M12 192h424c6.6 0 12 5.4 12 12v260c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V204c0-6.6 5.4-12 12-12zm436-44v-36c0-26.5-21.5-48-48-48h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v36c0 6.6 5.4 12 12 12h424c6.6 0 12-5.4 12-12z"></path></svg>');
+    }
+    
+    #primary .post .entry-header .entry-meta .tag-links:before{
+        background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="%23168dd2" d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"></path></svg>');
+    }
+    
+    #primary .post .entry-header .entry-meta .posted-on:before{
+        background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="%23168dd2" d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>');
+    }
+
+    #primary .post .entry-header .entry-meta .cat-links:before{
+        background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="%23168dd2" d="M527.943 224H480v-48c0-26.51-21.49-48-48-48H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h400a48.001 48.001 0 0 0 40.704-22.56l79.942-128c19.948-31.917-3.038-73.44-40.703-73.44zM54 112h134.118l64 64H426a6 6 0 0 1 6 6v42H152a48 48 0 0 0-41.098 23.202L48 351.449V117.993A5.993 5.993 0 0 1 54 112zm394 288H72l77.234-128H528l-80 128z"></path></svg>');
+    }
+
+    #primary .post .entry-header .entry-meta .comments-link:before{
+        background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="%23168dd2" d="M256 32C114.6 32 0 125.1 0 240c0 47.6 19.9 91.2 52.9 126.3C38 405.7 7 439.1 6.5 439.5c-6.6 7-8.4 17.2-4.6 26S14.4 480 24 480c61.5 0 110-25.7 139.1-46.3C192 442.8 223.2 448 256 448c141.4 0 256-93.1 256-208S397.4 32 256 32zm0 368c-26.7 0-53.1-4.1-78.4-12.1l-22.7-7.2-19.5 13.8c-14.3 10.1-33.9 21.4-57.5 29 7.3-12.1 14.4-25.7 19.9-40.2l10.6-28.1-20.6-21.8C69.7 314.1 48 282.2 48 240c0-88.2 93.3-160 208-160s208 71.8 208 160-93.3 160-208 160z"></path></svg>');
+    }
+
+    #primary .post .entry-header .entry-meta .byline:before{
+      background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="%23168dd2" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></svg>');
+    }
+
+    .site-header.header-3 .header-t .tel-link:before{
+        background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="%23fa9d00" d="M272 0H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h224c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48zM160 480c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm112-108c0 6.6-5.4 12-12 12H60c-6.6 0-12-5.4-12-12V60c0-6.6 5.4-12 12-12h200c6.6 0 12 5.4 12 12v312z"></path></svg>');
+    }
+
+    .site-header.header-5 .header-t .right .phone:before{
+        background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="%23fa9d00" d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.5 464-464 0-11.2-7.7-20.9-18.6-23.4z"></path></svg>');
+    }
+
+    .site-header.header-8 .header-t .right .phone:before{
+        background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="%23fa9d00" d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.5 464-464 0-11.2-7.7-20.9-18.6-23.4z"></path></svg>');
+    }
+
+    .site-header.header-8 .header-t .right address:before{
+        background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="%23fa9d00" d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.5 464-464 0-11.2-7.7-20.9-18.6-23.4z"></path></svg>');
+    }
+    
+            /* Author Comment Style */
+        .comments-area .comment-list .bypostauthor > .comment-body{
+            padding: 15px;
+            background: #ededed;
+        }
+    
+        
+        
+    </style><style id="fit-vids-style">.fluid-width-video-wrapper{width:100%;position:relative;padding:0;}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper object,.fluid-width-video-wrapper embed {position:absolute;top:0;left:0;width:100%;height:100%;}</style><script charset="utf-8" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/moment_timeline.4391e0bf4053fbaa2a022e3fad2a1e1a.js"></script><script charset="utf-8" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/timeline.34cf38a85ac899f1d6a0438a1659decc.js"></script><style type="text/css" data-fbcssmodules="css:fb.css.base css:fb.css.dialog css:fb.css.iframewidget css:fb.css.customer_chat_plugin_iframe">.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_reposition{overflow:hidden;position:relative}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}@keyframes fb_transform{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.fb_animate{animation:fb_transform .3s forwards}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}.fb_dialog_advanced{border-radius:8px;padding:10px}.fb_dialog_content{background:#fff;color:#373737}.fb_dialog_close_icon{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px}.fb_dialog_mobile .fb_dialog_close_icon{left:5px;right:auto;top:5px}.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}.fb_dialog_close_icon:hover{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent}.fb_dialog_close_icon:active{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent}.fb_dialog_iframe{line-height:0}.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #365899;color:#fff;font-size:14px;font-weight:bold;margin:0}.fb_dialog_content .dialog_title>span{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/Cou7n-nqK52.gif) no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}body.fb_hidden{height:100%;left:0;margin:0;overflow:visible;position:absolute;top:-10000px;transform:none;width:100%}.fb_dialog.fb_dialog_mobile.loading{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ya/r/3rhSv5V8j3o.gif) white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}.fb_dialog.fb_dialog_mobile.loading.centered{background:none;height:auto;min-height:initial;min-width:initial;width:auto}.fb_dialog.fb_dialog_mobile.loading.centered #fb_dialog_loader_spinner{width:100%}.fb_dialog.fb_dialog_mobile.loading.centered .fb_dialog_content{background:none}.loading.centered #fb_dialog_loader_close{clear:both;color:#fff;display:block;font-size:18px;padding-top:20px}#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .4);bottom:0;left:0;min-height:100%;position:absolute;right:0;top:0;width:100%;z-index:10000}#fb-root #fb_dialog_ipad_overlay.hidden{display:none}.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}.fb_dialog_mobile .fb_dialog_iframe{position:sticky;top:0}.fb_dialog_content .dialog_header{background:linear-gradient(from(#738aba), to(#2c4987));border-bottom:1px solid;border-color:#043b87;box-shadow:white 0 1px 1px -1px inset;color:#fff;font:bold 14px Helvetica, sans-serif;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}.fb_dialog_content .dialog_header table{height:43px;width:100%}.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px}.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px}.fb_dialog_content .touchable_button{background:linear-gradient(from(#4267B2), to(#2a4887));background-clip:padding-box;border:1px solid #29487d;border-radius:3px;display:inline-block;line-height:18px;margin-top:3px;max-width:85px;padding:4px 12px;position:relative}.fb_dialog_content .dialog_header .touchable_button input{background:none;border:none;color:#fff;font:bold 12px Helvetica, sans-serif;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}.fb_dialog_content .dialog_content{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #4a4a4a;border-bottom:0;border-top:0;height:150px}.fb_dialog_content .dialog_footer{background:#f5f6f7;border:1px solid #4a4a4a;border-top-color:#ccc;height:40px}#fb_dialog_loader_close{float:left}.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}#fb_dialog_loader_spinner{animation:rotateSpinner 1.2s linear infinite;background-color:transparent;background-image:url(https://static.xx.fbcdn.net/rsrc.php/v3/yD/r/t-wz8gw1xG1.png);background-position:50% 50%;background-repeat:no-repeat;height:24px;width:24px}@keyframes rotateSpinner{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}.fb_iframe_widget_fluid_desktop,.fb_iframe_widget_fluid_desktop span,.fb_iframe_widget_fluid_desktop iframe{max-width:100%}.fb_iframe_widget_fluid_desktop iframe{min-width:220px;position:relative}.fb_iframe_widget_lift{z-index:1}.fb_iframe_widget_fluid{display:inline}.fb_iframe_widget_fluid span{width:100%}
+.fb_mpn_mobile_landing_page_slide_out{animation-duration:200ms;animation-name:fb_mpn_landing_page_slide_out;transition-timing-function:ease-in}.fb_mpn_mobile_landing_page_slide_out_from_left{animation-duration:200ms;animation-name:fb_mpn_landing_page_slide_out_from_left;transition-timing-function:ease-in}.fb_mpn_mobile_landing_page_slide_up{animation-duration:500ms;animation-name:fb_mpn_landing_page_slide_up;transition-timing-function:ease-in}.fb_mpn_mobile_bounce_in{animation-duration:300ms;animation-name:fb_mpn_bounce_in;transition-timing-function:ease-in}.fb_mpn_mobile_bounce_out{animation-duration:300ms;animation-name:fb_mpn_bounce_out;transition-timing-function:ease-in}.fb_mpn_mobile_bounce_out_v2{animation-duration:300ms;animation-name:fb_mpn_fade_out;transition-timing-function:ease-in}.fb_customer_chat_bounce_in_v2{animation-duration:300ms;animation-name:fb_bounce_in_v2;transition-timing-function:ease-in}.fb_customer_chat_bounce_in_from_left{animation-duration:300ms;animation-name:fb_bounce_in_from_left;transition-timing-function:ease-in}.fb_customer_chat_bounce_out_v2{animation-duration:300ms;animation-name:fb_bounce_out_v2;transition-timing-function:ease-in}.fb_customer_chat_bounce_out_from_left{animation-duration:300ms;animation-name:fb_bounce_out_from_left;transition-timing-function:ease-in}.fb_invisible_flow{display:inherit;height:0;overflow-x:hidden;width:0}@keyframes fb_mpn_landing_page_slide_out{0%{margin:0 12px;width:100% - 24px}60%{border-radius:18px}100%{border-radius:50%;margin:0 24px;width:60px}}@keyframes fb_mpn_landing_page_slide_out_from_left{0%{left:12px;width:100% - 24px}60%{border-radius:18px}100%{border-radius:50%;left:12px;width:60px}}@keyframes fb_mpn_landing_page_slide_up{0%{bottom:0;opacity:0}100%{bottom:24px;opacity:1}}@keyframes fb_mpn_bounce_in{0%{opacity:.5;top:100%}100%{opacity:1;top:0}}@keyframes fb_mpn_fade_out{0%{bottom:30px;opacity:1}100%{bottom:0;opacity:0}}@keyframes fb_mpn_bounce_out{0%{opacity:1;top:0}100%{opacity:.5;top:100%}}@keyframes fb_bounce_in_v2{0%{opacity:0;transform:scale(0, 0);transform-origin:bottom right}50%{transform:scale(1.03, 1.03);transform-origin:bottom right}100%{opacity:1;transform:scale(1, 1);transform-origin:bottom right}}@keyframes fb_bounce_in_from_left{0%{opacity:0;transform:scale(0, 0);transform-origin:bottom left}50%{transform:scale(1.03, 1.03);transform-origin:bottom left}100%{opacity:1;transform:scale(1, 1);transform-origin:bottom left}}@keyframes fb_bounce_out_v2{0%{opacity:1;transform:scale(1, 1);transform-origin:bottom right}100%{opacity:0;transform:scale(0, 0);transform-origin:bottom right}}@keyframes fb_bounce_out_from_left{0%{opacity:1;transform:scale(1, 1);transform-origin:bottom left}100%{opacity:0;transform:scale(0, 0);transform-origin:bottom left}}@keyframes slideInFromBottom{0%{opacity:.1;transform:translateY(100%)}100%{opacity:1;transform:translateY(0)}}@keyframes slideInFromBottomDelay{0%{opacity:0;transform:translateY(100%)}97%{opacity:0;transform:translateY(100%)}100%{opacity:1;transform:translateY(0)}}</style></head>
+
+<body class="post-template-default single single-post postid-2928 single-format-standard wp-custom-logo group-blog no-banner leftsidebar" itemscope="" itemtype="https://schema.org/WebPage">
+
+    <div id="page" class="site">
+            <div class="mobile-header">
+            <div class="container">
+                    <div class="site-branding" itemscope="" itemtype="https://schema.org/Organization">
+        <a href="http://c.itdo.jp/" class="custom-logo-link" rel="home"><img width="300" height="169" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/ITDO_LOGO_20100519_itdo_SW-e1526956275523.png" class="custom-logo" alt="株式会社アイティードゥ"></a>		<div class="text-logo">
+                            <p class="site-title" itemprop="name"><a href="http://c.itdo.jp/" rel="home" itemprop="url">株式会社アイティードゥ</a></p>
+            				<p class="site-description" itemprop="description">会社紹介および技術情報公開</p>
+			        </div>
+    </div><!-- .site-branding -->
+                    <div class="right-panel">
+                                        <div class="btn-menu-open">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div> <!-- btn-menu-open -->
+                </div> <!-- right-panel -->
+            </div> <!-- container -->
+            <div class="mobile-menu"><div class="btn-close-menu">Close Menu</div>
+                <form role="search" method="get" class="search-form ajax-search" action="http://c.itdo.jp/">
+                <label>
+                    <span class="screen-reader-text">Search for:</span>
+                    <input type="search" class="search-field" placeholder="Search …" value="" name="s" autocomplete="off">
+                </label>                
+                <input type="submit" class="search-submit" value="Search">
+            <div class="ajax-search-results-container" style="display: none;"></div></form>    <nav id="mobile-site-navigation" class="mobile-main-navigation" role="navigation">
+	   <div class="menu-primary-container"><ul id="primary-menu" class="menu"><li id="menu-item-1246" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1246"><a href="http://c.itdo.jp/">ホーム</a></li>
+<li id="menu-item-1233" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1233"><a href="http://c.itdo.jp/category/announcement/">お知らせ</a></li>
+<li id="menu-item-1220" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1220"><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#">技術情報</a>
+<ul class="sub-menu">
+	<li id="menu-item-1774" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1774"><a href="http://c.itdo.jp/category/technical-information/idmanagement/">ID管理</a></li>
+	<li id="menu-item-1226" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1226"><a href="http://c.itdo.jp/category/technical-information/project-open/">]Project-Open[</a></li>
+	<li id="menu-item-2237" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2237"><a href="http://c.itdo.jp/category/technical-information/ansible/">Ansible</a></li>
+	<li id="menu-item-2615" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2615"><a href="http://c.itdo.jp/category/technical-information/aws-cloud/">AWS / クラウド</a></li>
+	<li id="menu-item-2709" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-2709"><a href="http://c.itdo.jp/category/technical-information/docker-kubernetes/">Docker/Kubernetes</a></li>
+	<li id="menu-item-1227" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1227"><a href="http://c.itdo.jp/category/technical-information/vmware/">VMware/仮想化</a></li>
+	<li id="menu-item-1245" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1245"><a href="http://c.itdo.jp/category/technical-information/system-manage/">システム運用管理</a></li>
+	<li id="menu-item-1223" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1223"><a href="http://c.itdo.jp/category/technical-information/cacti/">Cactiシステム管理</a></li>
+	<li id="menu-item-1243" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1243"><a href="http://c.itdo.jp/category/technical-information/network/">ネットワーク</a></li>
+	<li id="menu-item-1224" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1224"><a href="http://c.itdo.jp/category/technical-information/freebsd/">FreeBSD, BSD系OS</a></li>
+	<li id="menu-item-1225" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1225"><a href="http://c.itdo.jp/category/technical-information/centosrhel/">CentOS, RHEL, Linux</a></li>
+	<li id="menu-item-1228" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1228"><a href="http://c.itdo.jp/category/technical-information/windows/">Windowsサーバ</a></li>
+	<li id="menu-item-1229" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1229"><a href="http://c.itdo.jp/category/technical-information/server/">サーバソフトウェア</a></li>
+	<li id="menu-item-1232" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1232"><a href="http://c.itdo.jp/category/technical-information/security/">セキュリティ</a></li>
+	<li id="menu-item-1244" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1244"><a href="http://c.itdo.jp/category/technical-information/asterisk/">Asterisk/VoIP</a></li>
+	<li id="menu-item-1222" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1222"><a href="http://c.itdo.jp/category/technical-information/joomla/">Joomla!</a></li>
+	<li id="menu-item-1230" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1230"><a href="http://c.itdo.jp/category/technical-information/documents/">各種ドキュメント</a></li>
+	<li id="menu-item-1242" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1242"><a href="http://c.itdo.jp/category/technical-information/misc/">その他</a></li>
+</ul>
+<div class="angle-down"></div></li>
+<li id="menu-item-1231" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1231"><a href="http://c.itdo.jp/category/aboutitdo/company1/">アイティードゥの紹介</a></li>
+<li id="menu-item-1236" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-1236"><a href="http://c.itdo.jp/category/company/">会社情報</a>
+<ul class="sub-menu">
+	<li id="menu-item-1237" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1237"><a href="http://c.itdo.jp/company/profile/">会社概要</a></li>
+	<li id="menu-item-1238" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1238"><a href="http://c.itdo.jp/company/business/">業務内容</a></li>
+	<li id="menu-item-1241" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1241"><a href="http://c.itdo.jp/company/results/">業務実績</a></li>
+	<li id="menu-item-1240" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1240"><a href="http://c.itdo.jp/company/access/">アクセス</a></li>
+</ul>
+<div class="angle-down"></div></li>
+<li id="menu-item-1350" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-1350"><a href="http://c.itdo.jp/category/recruit/">採用情報</a>
+<ul class="sub-menu">
+	<li id="menu-item-1239" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1239"><a href="http://c.itdo.jp/recruit/recruit/">一般採用</a></li>
+	<li id="menu-item-1364" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1364"><a href="http://c.itdo.jp/category/recruit/newgraduates/">新卒採用</a></li>
+	<li id="menu-item-1365" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1365"><a href="http://c.itdo.jp/category/recruit/existingemployees/">社員の声</a></li>
+	<li id="menu-item-1450" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1450"><a href="http://c.itdo.jp/category/recruit/intern-about_itdo/">インターンシップ・実習</a></li>
+	<li id="menu-item-1395" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1395"><a href="http://c.itdo.jp/category/recruit/%e6%8e%a1%e7%94%a8%e9%96%a2%e4%bf%82%e3%81%ae%e3%81%8a%e7%9f%a5%e3%82%89%e3%81%9b/">採用関係のお知らせ</a></li>
+</ul>
+<div class="angle-down"></div></li>
+<li id="menu-item-1286" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1286"><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#">お問い合わせ</a>
+<ul class="sub-menu">
+	<li id="menu-item-1288" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1288"><a href="http://c.itdo.jp/contacts-business/">業務に関するお問い合わせ</a></li>
+	<li id="menu-item-1287" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1287"><a href="http://c.itdo.jp/contacts-recruit/">採用に関するお問い合わせ</a></li>
+</ul>
+<div class="angle-down"></div></li>
+<li id="menu-item-1324" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1324"><a href="http://c.itdo.jp/sitemap/">サイトマップ</a></li>
+</ul></div>    </nav>
+    <section id="rttk_social_links-2" class="widget widget_rttk_social_links"><h2 class="widget-title">Subscribe and Follow</h2>            <ul class="social-networks">
+                                            <li class="rttk-social-icon-wrap">
+                                <a target="_blank" href="https://www.facebook.com/itdojp/"><span class="rttk-social-icons-field-handle fontawesome fa-facebook" style="font-family: &#39;FontAwesome&#39;;"></span></a>
+                            </li>
+                                                    <li class="rttk-social-icon-wrap">
+                                <a target="_blank" href="https://www.instagram.com/itdojp/"><span class="rttk-social-icons-field-handle fontawesome fa-instagram" style="font-family: &#39;FontAwesome&#39;;"></span></a>
+                            </li>
+                                                    <li class="rttk-social-icon-wrap">
+                                <a target="_blank" href="https://twitter.com/itdojp"><span class="rttk-social-icons-field-handle fontawesome fa-twitter" style="font-family: &#39;FontAwesome&#39;;"></span></a>
+                            </li>
+                                    </ul>
+        </section>            </div> <!-- mobile-menu -->
+        </div>
+        <header id="masthead" class="site-header" itemscope="" itemtype="https://schema.org/WPHeader">
+    <div class="header-t">
+        <div class="container">        
+                <div class="site-branding" itemscope="" itemtype="https://schema.org/Organization">
+        <a href="http://c.itdo.jp/" class="custom-logo-link" rel="home"><img width="300" height="169" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/ITDO_LOGO_20100519_itdo_SW-e1526956275523.png" class="custom-logo" alt="株式会社アイティードゥ"></a>		<div class="text-logo">
+                            <p class="site-title" itemprop="name"><a href="http://c.itdo.jp/" rel="home" itemprop="url">株式会社アイティードゥ</a></p>
+            				<p class="site-description" itemprop="description">会社紹介および技術情報公開</p>
+			        </div>
+    </div><!-- .site-branding -->
+        		<div class="tools">
+                <section id="rttk_social_links-2" class="widget widget_rttk_social_links"><h2 class="widget-title">Subscribe and Follow</h2>            <ul class="social-networks">
+                                            <li class="rttk-social-icon-wrap">
+                                <a target="_blank" href="https://www.facebook.com/itdojp/"><span class="rttk-social-icons-field-handle fontawesome fa-facebook" style="font-family: &#39;FontAwesome&#39;;"></span></a>
+                            </li>
+                                                    <li class="rttk-social-icon-wrap">
+                                <a target="_blank" href="https://www.instagram.com/itdojp/"><span class="rttk-social-icons-field-handle fontawesome fa-instagram" style="font-family: &#39;FontAwesome&#39;;"></span></a>
+                            </li>
+                                                    <li class="rttk-social-icon-wrap">
+                                <a target="_blank" href="https://twitter.com/itdojp"><span class="rttk-social-icons-field-handle fontawesome fa-twitter" style="font-family: &#39;FontAwesome&#39;;"></span></a>
+                            </li>
+                                    </ul>
+        </section>    		</div>
+        </div>
+    </div>
+    
+    <div class="sticky-holder" style="height: 93px;"></div>
+    
+    <div class="header-b sticky-menu">
+        <div class="container">
+    		    <nav id="site-navigation" class="main-navigation" role="navigation">
+	   <div class="menu-primary-container"><ul id="primary-menu" class="menu"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1246"><a href="http://c.itdo.jp/">ホーム</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1233"><a href="http://c.itdo.jp/category/announcement/">お知らせ</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1220"><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#">技術情報</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1774"><a href="http://c.itdo.jp/category/technical-information/idmanagement/">ID管理</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1226"><a href="http://c.itdo.jp/category/technical-information/project-open/">]Project-Open[</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2237"><a href="http://c.itdo.jp/category/technical-information/ansible/">Ansible</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2615"><a href="http://c.itdo.jp/category/technical-information/aws-cloud/">AWS / クラウド</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-2709"><a href="http://c.itdo.jp/category/technical-information/docker-kubernetes/">Docker/Kubernetes</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1227"><a href="http://c.itdo.jp/category/technical-information/vmware/">VMware/仮想化</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1245"><a href="http://c.itdo.jp/category/technical-information/system-manage/">システム運用管理</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1223"><a href="http://c.itdo.jp/category/technical-information/cacti/">Cactiシステム管理</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1243"><a href="http://c.itdo.jp/category/technical-information/network/">ネットワーク</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1224"><a href="http://c.itdo.jp/category/technical-information/freebsd/">FreeBSD, BSD系OS</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1225"><a href="http://c.itdo.jp/category/technical-information/centosrhel/">CentOS, RHEL, Linux</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1228"><a href="http://c.itdo.jp/category/technical-information/windows/">Windowsサーバ</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1229"><a href="http://c.itdo.jp/category/technical-information/server/">サーバソフトウェア</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1232"><a href="http://c.itdo.jp/category/technical-information/security/">セキュリティ</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1244"><a href="http://c.itdo.jp/category/technical-information/asterisk/">Asterisk/VoIP</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1222"><a href="http://c.itdo.jp/category/technical-information/joomla/">Joomla!</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1230"><a href="http://c.itdo.jp/category/technical-information/documents/">各種ドキュメント</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1242"><a href="http://c.itdo.jp/category/technical-information/misc/">その他</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1231"><a href="http://c.itdo.jp/category/aboutitdo/company1/">アイティードゥの紹介</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-1236"><a href="http://c.itdo.jp/category/company/">会社情報</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1237"><a href="http://c.itdo.jp/company/profile/">会社概要</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1238"><a href="http://c.itdo.jp/company/business/">業務内容</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1241"><a href="http://c.itdo.jp/company/results/">業務実績</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1240"><a href="http://c.itdo.jp/company/access/">アクセス</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-1350"><a href="http://c.itdo.jp/category/recruit/">採用情報</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1239"><a href="http://c.itdo.jp/recruit/recruit/">一般採用</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1364"><a href="http://c.itdo.jp/category/recruit/newgraduates/">新卒採用</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1365"><a href="http://c.itdo.jp/category/recruit/existingemployees/">社員の声</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1450"><a href="http://c.itdo.jp/category/recruit/intern-about_itdo/">インターンシップ・実習</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1395"><a href="http://c.itdo.jp/category/recruit/%e6%8e%a1%e7%94%a8%e9%96%a2%e4%bf%82%e3%81%ae%e3%81%8a%e7%9f%a5%e3%82%89%e3%81%9b/">採用関係のお知らせ</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1286"><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#">お問い合わせ</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1288"><a href="http://c.itdo.jp/contacts-business/">業務に関するお問い合わせ</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1287"><a href="http://c.itdo.jp/contacts-recruit/">採用に関するお問い合わせ</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1324"><a href="http://c.itdo.jp/sitemap/">サイトマップ</a></li>
+</ul></div>    </nav>
+    <form role="search" method="get" class="search-form ajax-search" action="http://c.itdo.jp/">
+                <label>
+                    <span class="screen-reader-text">Search for:</span>
+                    <input type="search" class="search-field" placeholder="Search …" value="" name="s" autocomplete="off">
+                </label>                
+                <input type="submit" class="search-submit" value="Search">
+            <div class="ajax-search-results-container" style="display: none;"></div></form>        </div>
+    </div>
+</header>            
+            <div class="top-bar">
+        		<div class="container">
+                    <div id="crumbs" itemscope="" itemtype="https://schema.org/BreadcrumbList"><span itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem"><a itemprop="item" href="http://c.itdo.jp/"><span itemprop="name">Home</span></a><meta itemprop="position" content="1"><span class="separator">/</span></span><span itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem"><a itemprop="item" href="http://c.itdo.jp/category/technical-information/"><span itemprop="name">技術情報</span></a><meta itemprop="position" content="2"><span class="separator">/</span></span><span itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem"><a itemprop="item" href="http://c.itdo.jp/category/technical-information/docker-kubernetes/"><span itemprop="name">Docker/Kubernetes</span></a><meta itemprop="position" content="3"><span class="separator">/</span></span><span class="current" itemprop="itemListElement" itemscope="" itemtype="https://schema.org/ListItem"><a itemprop="item" href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/"><span itemprop="name">HAなRancherをVirtualBoxで構築しよう</span></a><meta itemprop="position" content="4"></span></div>                </div>
+            </div>
+            
+            <div id="content" class="site-content">
+        <div class="container">
+            <div class="row">
+    
+	<div id="primary" class="content-area">
+		<main id="main" class="site-main" role="main">
+
+		
+<article id="post-2928" class="post-2928 post type-post status-publish format-standard hentry category-docker-kubernetes tag-docker tag-helm tag-istio tag-k8s tag-kubernetes tag-rancher latest_post">
+
+        <header class="entry-header">
+		<h1 class="entry-title" itemprop="headline">HAなRancherをVirtualBoxで構築しよう</h1><div class="entry-meta"><span class="posted-on"><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/" rel="bookmark"><time class="entry-date published updated" datetime="2020-06-16T15:12:22+09:00">2020年6月16日</time></a></span><span class="tag-links"><a href="http://c.itdo.jp/tag/docker/" rel="tag">Docker</a>, <a href="http://c.itdo.jp/tag/helm/" rel="tag">Helm</a>, <a href="http://c.itdo.jp/tag/istio/" rel="tag">Istio</a>, <a href="http://c.itdo.jp/tag/k8s/" rel="tag">K8s</a>, <a href="http://c.itdo.jp/tag/kubernetes/" rel="tag">Kubernetes</a>, <a href="http://c.itdo.jp/tag/rancher/" rel="tag">Rancher</a></span><span class="cat-links"><a href="http://c.itdo.jp/category/technical-information/docker-kubernetes/" rel="category tag">Docker/Kubernetes</a></span><span class="comments-link"><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#respond">Leave a comment</a></span><span class="byline author vcard"><a class="url fn n" href="http://c.itdo.jp/author/saito-y/">齊藤勇貴</a></span></div>	</header><!-- .entry-header -->
+    		<div class="social-share floating-share">
+			<ul class="share-links">
+				<li><a href="https://www.facebook.com/sharer/sharer.php?u=http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/" rel="nofollow noopener" target="_blank"><svg class="svg-inline--fa fa-facebook-f fa-w-9" aria-hidden="true" data-prefix="fab" data-icon="facebook-f" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 264 512" data-fa-i2svg=""><path fill="currentColor" d="M76.7 512V283H0v-91h76.7v-71.7C76.7 42.4 124.3 0 193.8 0c33.3 0 61.9 2.5 70.2 3.6V85h-48.2c-37.8 0-45.1 18-45.1 44.3V192H256l-11.7 91h-73.6v229"></path></svg><!-- <i class="fab fa-facebook-f" aria-hidden="true"></i> --></a></li><li><a href="https://twitter.com/intent/tweet?text=HA%E3%81%AARancher%E3%82%92VirtualBox%E3%81%A7%E6%A7%8B%E7%AF%89%E3%81%97%E3%82%88%E3%81%86%C2%A0http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/" rel="nofollow noopener" target="_blank"><svg class="svg-inline--fa fa-twitter fa-w-16" aria-hidden="true" data-prefix="fab" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path></svg><!-- <i class="fab fa-twitter" aria-hidden="true"></i> --></a></li><li><a href="mailto:?Subject=HA%E3%81%AARancher%E3%82%92VirtualBox%E3%81%A7%E6%A7%8B%E7%AF%89%E3%81%97%E3%82%88%E3%81%86&amp;Body=http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/" rel="nofollow noopener" target="_blank"><svg class="svg-inline--fa fa-envelope fa-w-16" aria-hidden="true" data-prefix="fas" data-icon="envelope" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"></path></svg><!-- <i class="fas fa-envelope" aria-hidden="true"></i> --></a></li>			</ul>
+		</div>
+		    
+	<div class="entry-content" itemprop="text">
+		
+<h2>Rancherってなに？</h2>
+
+
+
+<hr class="wp-block-separator">
+
+
+
+<p>Kubernetes(K8s)を使いやすくするための、OSSのソフトウエアです！</p>
+
+
+
+<p>簡単には以下のことができます。</p>
+
+
+
+<ol><li>異なる環境のK8sクラスタの一元管理</li><li>K8sクラスタへのアプリの導入</li><li>Istio(サービスメッシュ)との連携</li></ol>
+
+
+
+<p>うーん、便利そうですけどどうなんでしょう？</p>
+
+
+
+<p>という事で、<strong>実際に作ってみて触って</strong>みましょう！</p>
+
+
+
+<h2>Rancherを構築する</h2>
+
+
+
+<hr class="wp-block-separator">
+
+
+
+<p>Rancherの構築には大きく分けて2種類あります。</p>
+
+
+
+<ul><li>単一ノードのRancherをDockerコンテナとして構築する。</li><li>高可用性のRancherをKubernetes内に構築する。</li></ul>
+
+
+
+<p>Dockerコンテナの方はたくさん記事があり、またIstioなどの機能を試してみたいので、<strong>高可用性Rancher</strong>の構築を行います！</p>
+
+
+
+<h2>Rancherの構成</h2>
+
+
+
+<hr class="wp-block-separator">
+
+
+
+<p>以下の構成でRancherを構築してみようと思います。</p>
+
+
+
+<ul><li>基盤： Windows10上のVirtualBox</li><li>構成台数：Racher 3台   LB&amp;DNS 1台</li><li>CPU：3,2,2,1</li><li>メモリ：4GB x 3, 1GB x 1</li><li>OS:Ubuntu 18.04</li><li>Nic：2つずつ(NAT, Internal)</li><li>ロードバランサ(LB),DNS： LBとDNS用のUbuntuを1台構築します。(cpu=1, memoty =1GB)</li></ul>
+
+
+
+<p>VirtualBoxのNATNICで外との通信を行い、InternalNICでクラスタ間の通信を行います。 </p>
+
+
+
+<p>PCには最低cpu8コア, メモリ16GBくらい必要です。</p>
+
+
+
+<h2>作業</h2>
+
+
+
+<hr class="wp-block-separator">
+
+
+
+<ol><li><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#heading1" class="aioseop-link">仮想マシンのブートストラップ</a></li><li><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#heading2" class="aioseop-link">OSの設定</a></li><li><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#heading3" class="aioseop-link">LBの構築</a></li><li><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#heading4" class="aioseop-link">DNSの構築</a></li><li><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#heading5" class="aioseop-link">Dockerのインストール</a></li><li><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#heading6" class="aioseop-link">rkeでのK8sクラスタ構築</a></li><li><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#heading7" class="aioseop-link">Helmのインストール</a></li><li><a href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#heading8" class="aioseop-link">Rancherのインストール</a></li></ol>
+
+
+
+<h2 id="heading1">1. 仮想マシンのブートストラップ</h2>
+
+
+
+<p>こういった検証をしていると仮想マシンの作成と、OSのインストールにかかる時間がとても大きいため、できる限り短縮して行うために<strong>Vagrant</strong>を使います。</p>
+
+
+
+<p>WindowsにVirtualBoxとVagrantをインストールしたら、任意のフォルダに以下のvagrantfileを作成します。</p>
+
+
+
+<pre class="wp-block-code"><code>vm_spec = [
+# rancherノード #1
+  { name: "rancher-0", cpu: 3, memory: 4096,
+    box: "ubuntu/bionic64",
+    private_ip: "172.16.20.210",
+    storage: "15GB",
+    comment: "rancher-0" },
+# rancherノード #2
+  { name: "rancher-1", cpu: 2, memory: 4096,
+    box: "ubuntu/bionic64",
+    private_ip: "172.16.20.211",
+    storage: "15GB",
+    comment: "rancher-1" },
+# rancherノード #3
+  { name: "rancher-2", cpu: 2, memory: 4096,
+    box: "ubuntu/bionic64",
+    private_ip: "172.16.20.212",
+    storage: "15GB",
+    comment: "rancher-2" },
+# LBノード #1
+  { name: "lb-0", cpu: 1, memory: 1024,
+    box: "ubuntu/bionic64",
+    private_ip: "172.16.20.201",
+    storage: "10GB",
+    comment: "lb-0" },
+]
+Vagrant.configure("2") do |config|
+  vm_spec.each do |spec|
+    config.vm.define spec[:name] do |server|
+      server.vm.box = spec[:box]
+      server.disksize.size = spec[:storage]
+      server.vm.box_url = spec[:box_url]
+      server.vm.hostname = spec[:name]
+      server.vm.network :private_network,ip: spec[:private_ip]
+      server.vm.provider "virtualbox" do |vbox|
+        vbox.gui = false
+        vbox.cpus = spec[:cpu]
+        vbox.memory = spec[:memory]
+      end
+    end
+  end
+end</code></pre>
+
+
+
+<p>Ubuntu vBoxデフォルトの10GBでは容量が足りなくなるので、disksizeを変更できるプラグインをインストールします。</p>
+
+
+
+<p>Windows PowerShellをvagrantfileのあるフォルダで開いて、以下を実行します。</p>
+
+
+
+<pre class="wp-block-code"><code>&gt; vagrant plugin install vagrant-disksize</code></pre>
+
+
+
+<p>インストールが完了したら、先ほどのvagrantfileの内容で仮想マシンを起動します。そのまま以下のコマンドを実行しましょう！</p>
+
+
+
+<pre class="wp-block-code"><code>&gt; vagrant up</code></pre>
+
+
+
+<p>環境にもよりますが、5～10分ほどでUbuntuが4台起動します。</p>
+
+
+
+<h2 id="heading2">2.OSの設定</h2>
+
+
+
+<hr class="wp-block-separator">
+
+
+
+<p>rootユーザ宛てにsshで接続できるような設定を4台全てに行います。<br>まずは以下のコマンドで作業するVMに接続します。</p>
+
+
+
+<pre class="wp-block-code"><code>&gt;vagrant ssh rancher-0
+Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 4.15.0-88-generic x86_64)
+～
+vagrant@rancher-0:~$</code></pre>
+
+
+
+<p>rootユーザのパスワードを変更します。</p>
+
+
+
+<pre class="wp-block-code"><code>vagrant@rancher-0:~$ sudo passwd
+Enter new UNIX password: (パスワードを入力する)
+Retype new UNIX password: (同じパスワードを入力する)
+passwd: password updated successfully
+vagrant@rancher-0:~$</code></pre>
+
+
+
+<p>rootユーザでパスワードによるsshを許可する設定を行います。</p>
+
+
+
+<pre class="wp-block-code"><code>vagrant@rancher-0:~$ sudo vi /etc/ssh/sshd_config
+## 以下を書き換えます
+～
+変更前
+#PermitRootLogin prohibit-password
+↓
+PermitRootLogin yes
+～
+変更前
+PasswordAuthentication no
+↓
+PasswordAuthentication yes
+～
+:wqで終了</code></pre>
+
+
+
+<p>sshdサービスを再起動します。</p>
+
+
+
+<pre class="wp-block-code"><code>vagrant@rancher-0:~$ sudo systemctl restart sshd
+vagrant@rancher-0:~$</code></pre>
+
+
+
+<p>これらの操作を他の3台にも行ってください。<br>これで<strong>OSの準備は完了</strong>です！</p>
+
+
+
+<h2 id="heading3">3. LBの構築</h2>
+
+
+
+<p>高可用性(HA)構成のRancherを構築するためには、1つのアドレスでリクエストを受けて3台のRancherに対してリクエストを割り振る、ロードバランサ(LB)が必要です。</p>
+
+
+
+<p>ここではVM lb-0にnginxを使ってLBを構築します。</p>
+
+
+
+<p>作業はTeraTermなどのターミナルソフトでlb-0にrootでssh接続を行います。</p>
+
+
+
+<p>まずはnginxインストールに必要なパッケージをインストールします。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# apt-get install -y build-essential \
+&gt; libpcre3-dev \
+&gt; libssl-dev \
+&gt; zlib1g-dev
+～
+Setting up g++ (4:7.4.0-1ubuntu2.3) ...
+update-alternatives: using /usr/bin/g++ to provide /usr/bin/c++ (c++) in auto mode
+Setting up build-essential (12.4ubuntu1) ...
+Processing triggers for man-db (2.8.3-2ubuntu0.1) ...
+Processing triggers for libc-bin (2.27-3ubuntu1) ...
+root@lb-0:~#</code></pre>
+
+
+
+<p>nginxをインストールします。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# wget http://nginx.org/download/nginx-1.14.2.tar.gz
+～
+nginx-1.14.2.tar.gz 100%[===================&gt;] 991.59K   324KB/s    in 3.1s
+
+2020-06-09 00:53:59 (324 KB/s) - ‘nginx-1.14.2.tar.gz’ saved [1015384/1015384]
+
+root@lb-0:~# tar zxf nginx-1.14.2.tar.gz
+root@lb-0:~# cd nginx-1.14.2/
+root@lb-0:~/nginx-1.14.2# ./configure --with-stream \
+&gt; --with-stream_ssl_module
+～
+  nginx http fastcgi temporary files: "fastcgi_temp"
+  nginx http uwsgi temporary files: "uwsgi_temp"
+  nginx http scgi temporary files: "scgi_temp"
+
+root@lb-0:~/nginx-1.14.2# make
+～
+        -e "s|%%ERROR_LOG_PATH%%|/usr/local/nginx/logs/error.log|" \
+        &lt; man/nginx.8 &gt; objs/nginx.8
+make[1]: Leaving directory '/root/nginx-1.14.2'
+root@lb-0:~/nginx-1.14.2# make install
+～
+test -d '/usr/local/nginx/html' \
+        || cp -R html '/usr/local/nginx'
+test -d '/usr/local/nginx/logs' \
+        || mkdir -p '/usr/local/nginx/logs'
+make[1]: Leaving directory '/root/nginx-1.14.2'
+root@lb-0:~/nginx-1.14.2#</code></pre>
+
+
+
+<p>これで/usr/local/nginxにnginxがインストールされました。</p>
+
+
+
+<p>nginxの設定ファイルを書き換えます。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# vi /usr/local/nginx/conf/nginx.conf
+## ファイルの内容 デフォルトの記載は消して、以下を書き込みます。
+worker_processes 4;
+worker_rlimit_nofile 40000;
+
+events {
+    worker_connections 8192;
+}
+
+stream {
+    upstream rancher_servers_http {
+        least_conn;
+        server 172.16.20.210:80 max_fails=3 fail_timeout=5s;
+        server 172.16.20.211:80 max_fails=3 fail_timeout=5s;
+        server 172.16.20.212:80 max_fails=3 fail_timeout=5s;
+    }
+    server {
+        listen 80;
+        proxy_pass rancher_servers_http;
+    }
+
+    upstream rancher_servers_https {
+        least_conn;
+        server 172.16.20.210:443 max_fails=3 fail_timeout=5s;
+        server 172.16.20.211:443 max_fails=3 fail_timeout=5s;
+        server 172.16.20.212:443 max_fails=3 fail_timeout=5s;
+    }
+    server {
+        listen     443;
+        proxy_pass rancher_servers_https;
+    }
+
+}</code></pre>
+
+
+
+<p>nginxを起動します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# /usr/local/nginx/sbin/nginx
+root@lb-0:~#</code></pre>
+
+
+
+<p>これでLBの構築は完了です。</p>
+
+
+
+<h2 id="heading4">4. DNSの構築</h2>
+
+
+
+<hr class="wp-block-separator">
+
+
+
+<p>RancherではリクエストしてきたURL(ホスト名)でアクセスを判別しているので、ドメイン名による名前解決が必要です。<br>また、FQDNはクラスタ内部でも通信に利用されるため、クラスタ内のcorednsからアクセス可能なDNSをlb-0に構築します。</p>
+
+
+
+<p>まずはlb-0にrootでssh接続を行い、bind9をインストールします。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# apt-get install -y bind9
+～
+Processing triggers for man-db (2.8.3-2ubuntu0.1) ...
+Processing triggers for ufw (0.36-0ubuntu0.18.04.1) ...
+Processing triggers for ureadahead (0.100.0-21) ...
+Processing triggers for libc-bin (2.27-3ubuntu1) ...
+root@lb-0:~#</code></pre>
+
+
+
+<p>bind9の設定ファイルを編集します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# vi /etc/bind9/named.conf.local
+## ファイル内容
+zone example.com. IN {
+  type master;
+  file example.com.zone";
+};</code></pre>
+
+
+
+<p>ドメイン名は何でもいいですが、.localは予約されていて後でつまづくので、末尾は.comなどにしましょう。</p>
+
+
+
+<p>　</p>
+
+
+
+<p>bind9のoptions設定ファイルを編集します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# vi /etc/bind/named.conf.options
+## ファイル内容
+options {
+        directory "/var/cache/bind";
+        listen-on port 53 { localhost; 172.16.20.0/24; 10.0.0.0/8; };
+        allow-query { localhost; 172.16.20.0/24; 10.0.0.0/8; };
+        forwarders { 8.8.8.8; };
+        recursion yes;
+};
+</code></pre>
+
+
+
+<p>続いてゾーンファイルを作成します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# vi /var/cache/bind/example.com.zone
+## ファイル内容
+$TTL 86400
+
+@ IN SOA lb.example.com root.example.com (
+  2018050600
+  3600
+  900
+  604800
+  86400
+)
+
+      IN NS lb.example.com.
+lb IN A  172.16.20.201
+rancher-0 IN A  172.16.20.210
+rancher-1 IN A  172.16.20.211
+rancher-2 IN A  172.16.20.212</code></pre>
+
+
+
+<p>bind9サービスを再起動します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# systemctl restart bind9
+root@lb-0:~#</code></pre>
+
+
+
+<p>全てのVMのDNSサーバをlb-0に設定します。<br>4台すべてに以下の作業を行ってください。</p>
+
+
+
+<pre class="wp-block-code"><code>root@rancher-0:~# vi /etc/resolv.conf
+## 内容を以下に書き換える
+nameserver 172.16.20.201
+options edns0
+search example.com</code></pre>
+
+
+
+<p>これで<strong>DNSの準備は完了です！</strong></p>
+
+
+
+<h2 id="heading5">5.Dockerのインストール</h2>
+
+
+
+<hr class="wp-block-separator">
+
+
+
+<p>当Webサイトの記事でも何回か紹介していますが、KubernetesはDockerなどのコンテナランタイムのコンテナ作成機能を利用してコンテナをオーケストレーションしています。</p>
+
+
+
+<p>ここではK8sクラスタを構築するために<strong>Rancher用のVM3台にDockerをインストールします。</strong></p>
+
+
+
+<p>まずはDockerのインストールに必要なパッケージをインストールします。</p>
+
+
+
+<pre class="wp-block-code"><code>root@rancher-0:~# apt-get install -y apt-transport-https \
+&gt; ca-certificates \
+&gt; curl software-properties-common gnupg2
+～
+Processing triggers for dbus (1.12.2-1ubuntu1.1) ...
+Processing triggers for man-db (2.8.3-2ubuntu0.1) ...
+Processing triggers for ca-certificates (20190110~18.04.1) ...
+Updating certificates in /etc/ssl/certs...
+0 added, 0 removed; done.
+Running hooks in /etc/ca-certificates/update.d...
+done.
+root@rancher-0:~#</code></pre>
+
+
+
+<p>Dockerのリポジトリをインストールします。</p>
+
+
+
+<pre class="wp-block-code"><code>root@rancher-0:~# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+OK
+root@rancher-0:~# add-apt-repository \
+&gt;   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+&gt;   $(lsb_release -cs) \
+&gt;   stable"
+～
+Get:6 http://archive.ubuntu.com/ubuntu bionic-backports InRelease [74.6 kB]
+Fetched 329 kB in 3s (107 kB/s)
+Reading package lists... Done
+root@rancher-0:~#</code></pre>
+
+
+
+<p>Dockerをインストールします。</p>
+
+
+
+<pre class="wp-block-code"><code>root@rancher-0:~# apt-get update &amp;&amp; apt-get install -y \
+&gt;   containerd.io=1.2.13-1 \
+&gt;   docker-ce=5:19.03.8~3-0~ubuntu-$(lsb_release -cs) \
+&gt;   docker-ce-cli=5:19.03.8~3-0~ubuntu-$(lsb_release -cs)
+～
+Created symlink /etc/systemd/system/sockets.target.wants/docker.socket → /lib/systemd/system/docker.socket.
+Processing triggers for libc-bin (2.27-3ubuntu1) ...
+Processing triggers for systemd (237-3ubuntu10.39) ...
+Processing triggers for man-db (2.8.3-2ubuntu0.1) ...
+Processing triggers for ureadahead (0.100.0-21) ...
+root@rancher-0:~#</code></pre>
+
+
+
+<p>一応動作確認しましょう。</p>
+
+
+
+<pre class="wp-block-code"><code>oot@rancher-0:~# docker pull nginx
+Using default tag: latest
+latest: Pulling from library/nginx
+afb6ec6fdc1c: Pull complete
+dd3ac8106a0b: Pull complete
+8de28bdda69b: Pull complete
+a2c431ac2669: Pull complete
+e070d03fd1b5: Pull complete
+Digest: sha256:c870bf53de0357813af37b9500cb1c2ff9fb4c00120d5fe1d75c21591293c34d
+Status: Downloaded newer image for nginx:latest
+docker.io/library/nginx:latest
+root@rancher-0:~#</code></pre>
+
+
+
+<p>これでDockerのインストールが完了です。</p>
+
+
+
+<h2 id="heading6">6. rkeでのK8sクラスタ構築</h2>
+
+
+
+<p>rkeというRancher Lab が提供している、K8sクラスタの構築支援ツールを利用して、K8sクラスタを構築します。</p>
+
+
+
+<p>まずは構築用のVMにrke本体を導入します。<br>今回はlb-0を構築用に利用しようと思います。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# wget https://github.com/rancher/rke/releases/download/v1.0.8/rke_linux-amd64
+～
+Saving to: ‘rke_linux-amd64’
+
+rke_linux-amd64     100%[===================&gt;]  45.13M  4.41MB/s    in 11s
+
+2020-06-09 02:58:39 (4.00 MB/s) - ‘rke_linux-amd64’ saved [47325245/47325245]
+root@lb-0:~# mv rke_linux-amd64 /usr/local/bin/rke
+root@lb-0:~# chmod +x /usr/local/bin/rke
+root@lb-0:~#</code></pre>
+
+
+
+<p>rkeでは、構築用VMからssh接続を行ってK8sクラスタを自動で構築します。</p>
+
+
+
+<p>root同士のsshがパスワード無しで行えるようにssh鍵の設定を行います。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:2ND8Kbv3Zqs/s1KUlx/WCZRSSZny0z1eORY+CVYOwBE root@lb-0
+The key's randomart image is:
++---[RSA 2048]----+
+|          .EB=*. |
+|       o   + Oo. |
+|      . o   =.=oB|
+|       + . .ooo&amp;+|
+|      . S o. .=.*|
+|         o  .  ..|
+|        .  .     |
+|         .o =    |
+|        ...B==   |
++----[SHA256]-----+
+root@lb-0:~#</code></pre>
+
+
+
+<p>RancherVM3台にssh公開鍵を配布します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# ssh-copy-id rancher-0
+～
+Now try logging into the machine, with:   "ssh 'rancher-0'"
+and check to make sure that only the key(s) you wanted were added.
+
+root@lb-0:~#</code></pre>
+
+
+
+<p>これでRancherVMにパスワード無しでssh接続できるようになりました。</p>
+
+
+
+<p>lb-0上に作成するK8sクラスタの構成を定義するファイルを作成します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# vi rancher-cluster.yml
+## ファイル内容
+nodes:
+  - address: 172.16.20.210
+    user: root
+    role: [controlplane, worker, etcd]
+    internal_address: 172.16.20.210
+  - address: 172.16.20.211
+    user: root
+    role: [controlplane, worker, etcd]
+    internal_address: 172.16.20.211
+  - address: 172.16.20.212
+    user: root
+    role: [controlplane, worker, etcd]
+    internal_address: 172.16.20.212
+
+services:
+  etcd:
+    snapshot: true
+    creation: 6h
+    retention: 24h
+
+network:
+  plugin: canal
+  options:
+    canal_iface: enp0s8
+
+dns:
+  provider: coredns
+  upstreamnameservers:
+  - 172.16.20.201
+
+# Required for external TLS termination with
+# ingress-nginx v0.22+
+ingress:
+  provider: nginx
+  options:
+    use-forwarded-headers: "true"</code></pre>
+
+
+
+<p>[network:]セクションでは、クラスタ内部の通信で利用するNICを指定しています。<br>これを指定しないと、NATNICで通信しようとするため、クラスタがうまく機能しません。</p>
+
+
+
+<p>[dns:]セクションでは、K8sクラスタ内部のcorednsが名前解決するためのdnsとしてlb-0を指定しています。<br>これによって、podからもlb-0に設定したゾーンの名前解決ができるようになります。</p>
+
+
+
+<p>それでは実際に構築してみましょう！</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# rke up --config rancher-cluster.yml
+～
+INFO[0365] [addons] Executing deploy job rke-metrics-addon
+INFO[0375] [addons] Metrics Server deployed successfully
+INFO[0375] [ingress] Setting up nginx ingress controller
+INFO[0375] [addons] Saving ConfigMap for addon rke-ingress-controller to Kubernetes
+INFO[0375] [addons] Successfully saved ConfigMap for addon rke-ingress-controller to Kubernetes
+INFO[0375] [addons] Executing deploy job rke-ingress-controller
+INFO[0386] [ingress] ingress controller nginx deployed successfully
+INFO[0386] [addons] Setting up user addons
+INFO[0386] [addons] no user addons defined
+INFO[0386] Finished building Kubernetes cluster successfully
+root@lb-0:~#</code></pre>
+
+
+
+<p>構築が完了すると、カレントディレクトリにkube_config_rancher-cluster.ymlというファイルができます。</p>
+
+
+
+<p>これがK8sクラスタにアクセスするためのkubeconfigファイルなので、ホームディレクトリの.kubeの下にconfigという名前で保存することで、kubectlでアクセスできるようになります。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# mkdir ~/.kube
+root@lb-0:~# cp kube_config_rancher-cluster.yml ~/.kube/config
+root@lb-0:~#</code></pre>
+
+
+
+<p>lb-0にkubectlをインストールします。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# mkdir ~/.kube
+root@lb-0:~# cp kube_config_rancher-cluster.yml ~/.kube/config
+root@lb-0:~# curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+OK
+root@lb-0:~# cat &lt;&lt;EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+&gt; deb https://apt.kubernetes.io/ kubernetes-xenial main
+&gt; EOF
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+root@lb-0:~# apt-get update
+～
+Reading package lists... Done
+root@lb-0:~# apt-get install -y kubectl
+～
+Selecting previously unselected package kubectl.
+(Reading database ... 65638 files and directories currently installed.)
+Preparing to unpack .../kubectl_1.18.3-00_amd64.deb ...
+Unpacking kubectl (1.18.3-00) ...
+Setting up kubectl (1.18.3-00) ...
+root@lb-0:~# kubectl get nodes
+NAME            STATUS   ROLES                      AGE   VERSION
+172.16.20.210   Ready    controlplane,etcd,worker   41m   v1.17.5
+172.16.20.211   Ready    controlplane,etcd,worker   41m   v1.17.5
+172.16.20.212   Ready    controlplane,etcd,worker   41m   v1.17.5
+root@lb-0:~#</code></pre>
+
+
+
+<p>これで、K8sクラスタが正常に動作していることが確認できました。</p>
+
+
+
+<h2 id="heading7">7. Helmのインストール</h2>
+
+
+
+<p>Rancher自体をHelmでインストールするので、まずはHelmを導入します。</p>
+
+
+
+<p>kubectlと同様に、lb-0に導入して、K8sクラスタを操作します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# wget https://get.helm.sh/helm-v3.2.3-linux-amd64.tar.gz
+～
+helm-v3.2.3-linux-amd64.tar.gz       100%[=====================================================================&gt;]  12.33M  1.77MB/s    in 6.4s
+
+2020-06-09 04:18:10 (1.93 MB/s) - ‘helm-v3.2.3-linux-amd64.tar.gz’ saved [12924654/12924654]
+
+root@lb-0:~# tar zxf helm-v3.2.3-linux-amd64.tar.gz
+root@lb-0:~# mv linux-amd64/helm /usr/local/bin/
+root@lb-0:~# helm version
+version.BuildInfo{Version:"v3.2.3", GitCommit:"8f832046e258e2cb800894579b1b3b50c2d83492", GitTreeState:"clean", GoVersion:"go1.13.12"}
+root@lb-0:~#</code></pre>
+
+
+
+<p>これでHelmのインストールは完了です。</p>
+
+
+
+<h2 id="heading8">8. Rancherのインストール</h2>
+
+
+
+<p>さあ、お待たせいたしました。<br>やっとRancherのインストールです。</p>
+
+
+
+<p>Rancherにはhttpsでアクセスを行わなければならないので、証明書を設定する必要があります。</p>
+
+
+
+<p>ここではRancherデフォルトの自己証明書を利用します。</p>
+
+
+
+<p>そのためにcert-managerをインストールします。</p>
+
+
+
+<p>まずはCRDを作成します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~/linux-amd64# kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml
+customresourcedefinition.apiextensions.k8s.io/certificaterequests.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/certificates.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/challenges.acme.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/clusterissuers.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/issuers.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/orders.acme.cert-manager.io created
+root@lb-0:~/linux-amd64# </code></pre>
+
+
+
+<p>cert-managerのnamespaceを作成します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~/linux-amd64# kubectl create namespace cert-manager
+namespace/cert-manager created
+root@lb-0:~/linux-amd64#</code></pre>
+
+
+
+<p>helmリポジトリを導入します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~/linux-amd64# helm repo add jetstack https://charts.jetstack.io
+"jetstack" has been added to your repositories
+root@lb-0:~/linux-amd64# helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "jetstack" chart repository
+Update Complete. ? Happy Helming!?
+root@lb-0:~/linux-amd64#</code></pre>
+
+
+
+<p>cert-managerをインストールします。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~/linux-amd64# helm install \
+&gt;   cert-manager jetstack/cert-manager \
+&gt;   --namespace cert-manager \
+&gt;   --version v0.15.0
+～
+documentation:
+
+https://cert-manager.io/docs/usage/ingress/
+root@lb-0:~/linux-amd64#</code></pre>
+
+
+
+<p>これで証明書発行の準備ができました。</p>
+
+
+
+<p>それでは<strong>Rancherをインストールしましょう！</strong></p>
+
+
+
+<p>まずはRancher用のHelmリポジトリをインストールします。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
+"rancher-stable" has been added to your repositories
+root@lb-0:~#</code></pre>
+
+
+
+<p>Rancher用のnamespaceを作成します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# kubectl create namespace cattle-system
+namespace/cattle-system created
+root@lb-0:~#</code></pre>
+
+
+
+<p>Rancherをインストールします。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# helm install rancher rancher-stable/rancher \
+&gt;   --namespace cattle-system \
+&gt;   --set hostname=lb.example.com
+～
+Browse to https://lb.example.com
+
+Happy Containering!
+root@lb-0:~#</code></pre>
+
+
+
+<p>インストールが完了したように見えますが、裏ではポッドが作成されたり、いろいろ動いています。</p>
+
+
+
+<p>最後にrancherのロールアウトが行われるので、ロールアウトの状況を確認します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# kubectl -n cattle-system rollout status deploy/rancher
+Waiting for deployment "rancher" rollout to finish: 0 of 3 updated replicas are available...
+Waiting for deployment "rancher" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment spec update to be observed...
+Waiting for deployment "rancher" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment "rancher" rollout to finish: 2 of 3 updated replicas are available...
+deployment "rancher" successfully rolled out
+root@lb-0:~#</code></pre>
+
+
+
+<p>これでRancherのインストールは完了です。</p>
+
+
+
+<p>念のためRancherのポッドが起動していることを確認します。</p>
+
+
+
+<pre class="wp-block-code"><code>root@lb-0:~# kubectl -n cattle-system get deploy rancher
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+rancher   3/3     3            3           7m38s
+root@lb-0:~#</code></pre>
+
+
+
+<p>ブラウザからRancherにアクセスしてみます。<br>PCのDNSを一時的にlb-0にするか、hostsに書き込んで、[lb.example.com]で172.16.20.201にアクセスできるようにしてください。</p>
+
+
+
+<pre class="wp-block-code"><code>## Windowsのhostsの場合
+172.16.20.201 lb.example.com</code></pre>
+
+
+
+<p>ブラウザから[lb.example.com]にアクセスします。</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="1024" height="824" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/image-1024x824.png" alt="" class="wp-image-2933" srcset="http://c.itdo.jp/wp-content/uploads/2020/06/image-1024x824.png 1024w, http://c.itdo.jp/wp-content/uploads/2020/06/image-300x241.png 300w, http://c.itdo.jp/wp-content/uploads/2020/06/image-768x618.png 768w, http://c.itdo.jp/wp-content/uploads/2020/06/image-600x483.png 600w, http://c.itdo.jp/wp-content/uploads/2020/06/image.png 1262w" sizes="(max-width: 1024px) 100vw, 1024px"></figure>
+
+
+
+<p>Rancherの<strong>初期画面が表示されました！</strong><br>おめでとうございます！</p>
+
+
+
+<p>あとはパスワードを設定して触ってみてください。</p>
+
+
+
+<h2>おわりに</h2>
+
+
+
+<p>今回は、クラウド上に構築すると非常にコストがかかる高可用性構成のRancherを、VirtualBoxに無理やりインストールしてみました。</p>
+
+
+
+<p>Windowsでの手順ですが、PowerShellをTerminalに読み替えることでMacやLinuxでも構築できると思います。</p>
+
+
+
+<p>構築するPCにそれなりにスペックが必要ですが、料金を気にせずに検証するには非常に有用な環境ではないかと思います。</p>
+
+
+
+<p>また、ここからのRancherの操作概要については以下のQiita記事にて公開していますので、よろしければそちらもご覧くださいませ。<br>・<a href="https://qiita.com/XJK/items/879ea8cd8d7c677723f8">Rancherって何ができるの？</a></p>
+
+
+
+<p></p>
+	</div><!-- .entry-content -->
+     
+     
+	<footer class="entry-footer">
+			</footer><!-- .entry-footer -->
+	
+</article><!-- #post-## -->
+
+	<nav class="navigation post-navigation" role="navigation" aria-label="投稿">
+		<h2 class="screen-reader-text">投稿ナビゲーション</h2>
+		<div class="nav-links"><div class="nav-previous"><a href="http://c.itdo.jp/technical-information/system-manage/winget/" rel="prev">Windows公式パッケージマネージャ「winget」とは</a></div><div class="nav-next"><a href="http://c.itdo.jp/technical-information/docker-kubernetes/kubernetes-basics/" rel="next">インフラエンジニアのためのKubernetesの基本</a></div></div>
+	</nav><div class="comments-area">
+    	<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">コメントを残す <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://c.itdo.jp/technical-information/docker-kubernetes/ha-rancher/#respond" style="display:none;">コメントをキャンセル</a></small></h3><form action="http://c.itdo.jp/wp-comments-post.php" method="post" id="commentform" class="comment-form"><p class="comment-notes"><span id="email-notes">メールアドレスが公開されることはありません。</span> <span class="required">*</span> が付いている欄は必須項目です</p><p class="comment-form-comment"><label class="screen-reader-text" for="comment">Comment</label><textarea id="comment" name="comment" placeholder="Comment" cols="45" rows="8" aria-required="true" required=""></textarea></p><p class="comment-form-author"><label class="screen-reader-text" for="author">Name<span class="required">*</span></label><input id="author" name="author" placeholder="Name*" type="text" value="" size="30" aria-required="true" required=""></p>
+<p class="comment-form-email"><label class="screen-reader-text" for="email">Email<span class="required">*</span></label><input id="email" name="email" placeholder="Email*" type="text" value="" size="30" aria-required="true" required=""></p>
+<p class="comment-form-url"><label class="screen-reader-text" for="url">Website</label><input id="url" name="url" placeholder="Website" type="text" value="" size="30"></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="コメントを送信"> <input type="hidden" name="comment_post_ID" value="2928" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><input type="hidden" id="ct_checkjs_65ded5353c5ee48d0b7d48c591b8f430" name="ct_checkjs" value="865335611"></form>	</div><!-- #respond -->
+	</div>
+
+		</main><!-- #main -->
+	</div><!-- #primary -->
+
+
+<aside id="secondary" class="widget-area" role="complementary" itemscope="" itemtype="https://schema.org/WPSideBar">
+	<section id="search-3" class="widget widget_search"><form role="search" method="get" class="search-form ajax-search" action="http://c.itdo.jp/">
+                <label>
+                    <span class="screen-reader-text">Search for:</span>
+                    <input type="search" class="search-field" placeholder="Search …" value="" name="s" autocomplete="off">
+                </label>                
+                <input type="submit" class="search-submit" value="Search">
+            <div class="ajax-search-results-container" style="display: none;"></div></form></section><section id="rttk_pro_popular_post-1" class="widget widget_rttk_pro_popular_post"><h2 class="widget-title">良く見られているページ</h2>            <ul>
+                                    <li>
+                                                <div class="entry-header">
+                            <h3 class="entry-title"><a href="http://c.itdo.jp/technical-information/ansible/ansible-tutorial/">Ansible入門者向け学習ガイド(CentOS編)</a></h3>
+                                                            <div class="entry-meta"> 
+                                    <span class="posted-on"><a href="http://c.itdo.jp/technical-information/ansible/ansible-tutorial/" rel="bookmark"><time class="entry-date published updated" datetime="2020-04-06T11:32:37+09:00">2020年4月6日</time></a></span>                                </div>
+                                                            <span class="view-count">41937 Views</span>
+                                                    </div>                        
+                    </li>        
+                                    <li>
+                                                <div class="entry-header">
+                            <h3 class="entry-title"><a href="http://c.itdo.jp/company/profile/">会社概要</a></h3>
+                                                            <div class="entry-meta"> 
+                                    <span class="posted-on"><a href="http://c.itdo.jp/company/profile/" rel="bookmark"><time class="entry-date published updated" datetime="2021-01-11T06:01:00+09:00">2021年1月11日</time></a></span>                                </div>
+                                                            <span class="view-count">27531 Views</span>
+                                                    </div>                        
+                    </li>        
+                                    <li>
+                                                <div class="entry-header">
+                            <h3 class="entry-title"><a href="http://c.itdo.jp/recruit/recruit/">一般採用</a></h3>
+                                                            <div class="entry-meta"> 
+                                    <span class="posted-on"><a href="http://c.itdo.jp/recruit/recruit/" rel="bookmark"><time class="entry-date published updated" datetime="2010-01-15T06:03:22+09:00">2010年1月15日</time></a></span>                                </div>
+                                                            <span class="view-count">21966 Views</span>
+                                                    </div>                        
+                    </li>        
+                                    <li>
+                                                    <a href="http://c.itdo.jp/technical-information/cacti/cacti-watch-rtx1200-ex/" class="post-thumbnail">
+                                <img width="150" height="150" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/DataTemplates_1_RTX1200-150x150.png" class="attachment-thumbnail size-thumbnail wp-post-image" alt="DataTemplates_1_RTX1200" loading="lazy">                            </a>
+                                                <div class="entry-header">
+                            <h3 class="entry-title"><a href="http://c.itdo.jp/technical-information/cacti/cacti-watch-rtx1200-ex/">CactiによるYAMAHAルータ（RTX1200）の監視</a></h3>
+                                                            <div class="entry-meta"> 
+                                    <span class="posted-on"><a href="http://c.itdo.jp/technical-information/cacti/cacti-watch-rtx1200-ex/" rel="bookmark"><time class="entry-date published updated" datetime="2010-12-01T04:31:13+09:00">2010年12月1日</time></a></span>                                </div>
+                                                            <span class="view-count">12690 Views</span>
+                                                    </div>                        
+                    </li>        
+                                    <li>
+                                                <div class="entry-header">
+                            <h3 class="entry-title"><a href="http://c.itdo.jp/technical-information/idmanagement/keycloak-gatekeeper-minimal/">Keycloak Gatekeeperを最小構成で試す。</a></h3>
+                                                            <div class="entry-meta"> 
+                                    <span class="posted-on"><a href="http://c.itdo.jp/technical-information/idmanagement/keycloak-gatekeeper-minimal/" rel="bookmark"><time class="entry-date published updated" datetime="2019-06-06T17:56:46+09:00">2019年6月6日</time></a></span>                                </div>
+                                                            <span class="view-count">11389 Views</span>
+                                                    </div>                        
+                    </li>        
+                            </ul>
+            </section><section id="rttk_pro_twitter_feeds_widget-1" class="widget widget_rttk_pro_twitter_feeds_widget"><h2 class="widget-title">Follow us</h2>
+        <div class="rttk-tw-feed">
+        <iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="twitter-timeline twitter-timeline-rendered" style="position: static; visibility: visible; display: inline-block; width: 400px; padding: 0px; border: none; max-width: 100%; min-width: 180px; margin-top: 0px; margin-bottom: 0px; height: 1414.66px;" data-widget-id="profile:itdojp" title="Twitterタイムライン" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/saved_resource.html"></iframe>
+        </div>						
+	</section><section id="rttk_pro_facebook_page_widget-1" class="widget widget_rttk_pro_facebook_page_widget">        <div id="fb-root" class=" fb_reset"><div style="position: absolute; top: -10000px; width: 0px; height: 0px;"><div></div></div></div>
+        <script>
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+        
+        <div class="rttk-pro-facebook-page-box">
+        <h2 class="widget-title">Our Facebook Page</h2>        <div class="fb-page fb_iframe_widget" data-href="https://facebook.com/itdojp" data-height="400" data-width="300" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" data-small-header="true" data-tabs="timeline" fb-xfbml-state="rendered" fb-iframe-plugin-query="adapt_container_width=true&amp;app_id=&amp;container_width=263&amp;height=400&amp;hide_cover=false&amp;href=https%3A%2F%2Ffacebook.com%2Fitdojp&amp;locale=en_GB&amp;sdk=joey&amp;show_facepile=true&amp;small_header=true&amp;tabs=timeline&amp;width=300"><span style="vertical-align: bottom; width: 263px; height: 400px;"><iframe name="f17fbfe95f6ac" width="300px" height="400px" data-testid="fb:page Facebook Social Plugin" title="fb:page Facebook Social Plugin" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" allow="encrypted-media" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/page.html" style="border: none; visibility: visible; width: 263px; height: 400px;" class=""></iframe></span></div>        
+        </div></section><section id="rttk_pro_instagram_widget-1" class="widget widget_rttk_pro_instagram_widget"><h2 class="widget-title">Instagram</h2>	
+			<ul id="instagram-36" class="rrtk-instagram-small"></ul>
+			
+			<script>
+                    jQuery(document).ready(function($){
+				    $.fn.jqinstapics = function (options) {
+
+				        // Defaults
+				        var defaults = {
+				            "user_id": null,
+				            "access_token": null,
+				            "count": 10
+				        };                      
+
+				        var o = $.extend(defaults, options);
+
+				        return this.each(function () {
+				        
+				          // Vars
+				          var elem = $(this),
+				              url = "https://api.instagram.com/v1/users/" + o.user_id + "/media/recent?access_token=" + o.access_token + "&count=" + o.count + "&callback=?";
+				               
+				            // Get the images    
+				            $.getJSON(url, function(data){
+				                $.each(data.data, function (i, val) {
+				                    var li = $("<li/>").appendTo(elem),
+				                        a = $("<a/>", {"href": val.link, "target": "_blank"}).appendTo(li),
+				                        img = $("<img/>", {"src": val.images.standard_resolution.url}).appendTo(a);
+				                    
+				                    if (val.caption){
+				                        a.attr("title", val.caption.text);
+				                    }
+				                });
+				            });
+				            
+				            if(o.user_id == null || o.access_token == null){
+				              elem.append("<li>Please specify a User ID and Access Token, as outlined in the docs.</li>");
+				            }
+
+				        });
+				    };
+				$("#instagram-36").jqinstapics({
+				  "user_id": "8205416927",
+				  "access_token": "8205416927.M2E4MWE5Zg==.OGY2YzZhMGJiM2I1.NGYyYWI4NDg1NWM2ODY3YzNjMjQ=",
+				  "count": 9
+				});
+				});
+
+			</script>			<p class="clear"><a href="http://instagram.com/" rel="me" target="_blank">Follow Me!</a></p>
+		</section></aside><!-- #secondary -->
+            </div><!-- .row/not-found -->
+        </div><!-- .container -->
+    </div><!-- #content -->
+        <footer id="colophon" class="site-footer" role="contentinfo" itemscope="" itemtype="https://schema.org/WPFooter">
+        <div class="footer-t">
+		<div class="container">
+			<div class="row">
+								
+                                
+                                    <div class="column">
+					   <section id="rttk_social_links-4" class="widget widget_rttk_social_links"><h2 class="widget-title">Subscribe and Follow</h2>            <ul class="social-networks">
+                                            <li class="rttk-social-icon-wrap">
+                                <a target="_blank" href="https://www.facebook.com/itdojp/"><span class="rttk-social-icons-field-handle fontawesome fa-facebook" style="font-family: &#39;FontAwesome&#39;;"></span></a>
+                            </li>
+                                                    <li class="rttk-social-icon-wrap">
+                                <a target="_blank" href="https://twitter.com/itdojp/"><span class="rttk-social-icons-field-handle fontawesome fa-twitter" style="font-family: &#39;FontAwesome&#39;;"></span></a>
+                            </li>
+                                                    <li class="rttk-social-icon-wrap">
+                                <a target="_blank" href="https://www.instagram.com/itdojp/"><span class="rttk-social-icons-field-handle fontawesome fa-instagram" style="font-family: &#39;FontAwesome&#39;;"></span></a>
+                            </li>
+                                    </ul>
+        </section>	
+					</div>
+                			</div>
+		</div>
+	</div>
+        <div class="footer-b">
+		<div class="container">
+			<div class="site-info">
+				<span class="copyright">
+                Copyright (C) 2007-2018 ITDO Inc. All Rights Reserved.                </span>
+                
+                                                
+			</div>
+		</div>
+	</div>
+        </footer><!-- #colophon -->
+    <div class="overlay"></div>
+        <div id="rara-top" style="display: block;"><svg class="svg-inline--fa fa-angle-up fa-w-10" aria-hidden="true" data-prefix="fa" data-icon="angle-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z"></path></svg><!-- <i class="fa fa-angle-up"></i> --></div>
+        </div><!-- #page -->
+    <script type="text/javascript">				
+                    window.addEventListener('DOMContentLoaded', function () {
+                        setTimeout(function(){
+                            if( document.querySelectorAll('[name^=ct_checkjs]').length > 0 ) {
+                                apbct_public_sendAJAX(
+                                    { action: 'apbct_js_keys__get' },
+                                    { callback: apbct_js_keys__set_input_value, apbct_ajax: 'custom_ajax' }
+                                )
+                            }
+                        },0)					    
+                    });				
+                </script><!-- Instagram Feed JS -->
+<script type="text/javascript">
+var sbiajaxurl = "http://c.itdo.jp/wp-admin/admin-ajax.php";
+</script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/regenerator-runtime.min.js" id="regenerator-runtime-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/wp-polyfill.min.js" id="wp-polyfill-js"></script>
+<script type="text/javascript" id="contact-form-7-js-extra">
+/* <![CDATA[ */
+var wpcf7 = {"api":{"root":"http:\/\/c.itdo.jp\/wp-json\/","namespace":"contact-form-7\/v1"}};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/index.js" id="contact-form-7-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/jquery.fancybox.min.js" id="jquery-fancybox-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/all.min.js" id="all-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/v4-shims.min.js" id="v4-shims-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/jquery.fitvids.min.js" id="jquery-fitvids-js"></script>
+<script type="text/javascript" id="lawyer-landing-page-pro-custom-js-extra">
+/* <![CDATA[ */
+var lawyer_landing_page_pro_data = {"lightbox":"1","auto":"1","loop":"1","speed":"5000","drag":"","animation":"hinge","hlayout":"one","sticky":"1","ed_section_menu":"","url":"http:\/\/c.itdo.jp\/wp-admin\/admin-ajax.php","rtl":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/custom.min.js" id="lawyer-landing-page-pro-custom-js"></script>
+<script type="text/javascript" id="lawyer-landing-page-pro-ajax-js-extra">
+/* <![CDATA[ */
+var lawyer_landing_page_pro_ajax = {"url":"http:\/\/c.itdo.jp\/wp-admin\/admin-ajax.php","startPage":"1","maxPages":"0","nextLink":"","autoLoad":"numbered","loadmore":"Load More Posts","loading":"Loading...","nomore":"No More Post","plugin_url":"http:\/\/c.itdo.jp\/wp-content\/plugins"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/ajax.min.js" id="lawyer-landing-page-pro-ajax-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/comment-reply.min.js" id="comment-reply-js"></script>
+<script type="text/javascript" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/wp-embed.min.js" id="wp-embed-js"></script>
+
+
+<iframe scrolling="no" frameborder="0" allowtransparency="true" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/widget_iframe.a58e82e150afc25eb5372dd55a98b778.html" title="Twitter settings iframe" style="display: none;"></iframe><iframe id="rufous-sandbox" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: none;" title="Twitter analytics iframe" src="./HAなRancherをVirtualBoxで構築しよう _ 株式会社アイティードゥ_files/saved_resource(1).html"></iframe><div id="gtx-trans" style="position: absolute; left: 575px; top: 4457.5px;"><div class="gtx-trans-icon"></div></div></body></html>
