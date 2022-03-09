@@ -6,39 +6,34 @@ OS Rocky Linux8
 vcpu 1
 memory 1024MB
 IP 192.168.0.150
-IP 192.168.56.150
 HDD 40GB
 
-rancher-master-01
+【mac】rancher-master-01
 OS Rocky Linux8
 vcpu 2
-memory 2048MB
+memory 4096MB
 IP 192.168.0.151
-IP 192.168.56.151
 HDD 40GB
 
-rancher-master-02
+【mac】rancher-master-02
 OS Rocky Linux8
 vcpu 2
-memory 2048MB
+memory 4096MB
 IP 192.168.0.152
-IP 192.168.56.152
 HDD 40GB
 
-rancher-master-03
+【win】rancher-master-03
 OS Rocky Linux8
 vcpu 2
-memory 2048MB
+memory 4096MB
 IP 192.168.0.153
-IP 192.168.56.153
 HDD 40GB
 
-rancher-worker-01
+【mac】rancher-worker-01
 OS Rocky Linux8
 vcpu 2
 memory 2048MB
 IP 192.168.0.154
-IP 192.168.56.154
 HDD 40GB
 
 # vagrant構築
@@ -53,6 +48,8 @@ vagrant up
 
 cd /Users/tadanobu/Documents/Kubernetes/rancher-ha/rancher-worker
 vagrant up
+
+※vagrant up後、全てvagrant haltしてからVirtualBoxの設定→ネットワーク→アダプター2→アダプタータイプを「PCnet-FAST III (Am79C973)」へ変更して保存する。
 
 # 全vagrantの端末へvagrant shhで接続し、以下を設定する
 [tadanobu@MacBook-Pro ]$ vagrant ssh rancher-master-01
@@ -92,9 +89,9 @@ events {
 stream {
     upstream rancher_servers_http {
         least_conn;
-        server 192.168.56.151:80 max_fails=3 fail_timeout=5s;
-        server 192.168.56.152:80 max_fails=3 fail_timeout=5s;
-        server 192.168.56.153:80 max_fails=3 fail_timeout=5s;
+        server 192.168.0.151:80 max_fails=3 fail_timeout=5s;
+        server 192.168.0.152:80 max_fails=3 fail_timeout=5s;
+        server 192.168.0.153:80 max_fails=3 fail_timeout=5s;
     }
     server {
         listen 80;
@@ -103,9 +100,9 @@ stream {
 
     upstream rancher_servers_https {
         least_conn;
-        server 192.168.56.151:443 max_fails=3 fail_timeout=5s;
-        server 192.168.56.152:443 max_fails=3 fail_timeout=5s;
-        server 192.168.56.153:443 max_fails=3 fail_timeout=5s;
+        server 192.168.0.151:443 max_fails=3 fail_timeout=5s;
+        server 192.168.0.152:443 max_fails=3 fail_timeout=5s;
+        server 192.168.0.153:443 max_fails=3 fail_timeout=5s;
     }
     server {
         listen     443;
@@ -175,9 +172,9 @@ $TTL 86400
 
     IN  NS  lb.example.com.
 lb  IN  A   192.168.0.150
-rancher-master-01   IN  A   192.168.56.151
-rancher-master-02   IN  A   192.168.56.152
-rancher-master-02   IN  A   192.168.56.153
+rancher-master-01   IN  A   192.168.0.151
+rancher-master-02   IN  A   192.168.0.152
+rancher-master-03   IN  A   192.168.0.153
 ```
 
 ### bind再起動
@@ -241,18 +238,22 @@ root@lb-0:~# vi rancher-cluster.yml
 ## ファイル内容
 ```
 nodes:
-  - address: 192.168.56.151
+  - address: 192.168.0.151
     user: root
-    role: [controlplane, etcd, worker]
-    internal_address: 192.168.56.151
-  - address: 192.168.56.152
+    role: [controlplane, etcd]
+    internal_address: 192.168.0.151
+  - address: 192.168.0.152
     user: root
-    role: [controlplane, etcd, worker]
-    internal_address: 192.168.56.152
-  - address: 192.168.56.153
+    role: [controlplane, etcd]
+    internal_address: 192.168.0.152
+  - address: 192.168.0.153
     user: root
-    role: [controlplane, etcd, worker]
-    internal_address: 192.168.56.153
+    role: [controlplane, etcd]
+    internal_address: 192.168.0.153
+  - address: 192.168.0.154
+    user: root
+    role: [worker]
+    internal_address: 192.168.0.154
 
 services:
   etcd:
@@ -260,15 +261,15 @@ services:
     creation: 6h
     retention: 24h
 
-network:
-  plugin: canal
-  options:
-    canal_iface: eth2
+# network:
+#   plugin: canal
+#   options:
+#     canal_iface: eth2
 
 dns:
   provider: coredns
   upstreamnameservers:
-  - 192.168.56.150
+  - 192.168.0.150
 
 # Required for external TLS termination with
 # ingress-nginx v0.22+
