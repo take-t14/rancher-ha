@@ -10,30 +10,44 @@ HDD 40GB
 
 【mac】rancher-master-01
 OS Rocky Linux8
-vcpu 2
+vcpu 4
 memory 4096MB
 IP 192.168.0.151
 HDD 40GB
 
 【mac】rancher-master-02
 OS Rocky Linux8
-vcpu 2
+vcpu 4
 memory 4096MB
 IP 192.168.0.152
 HDD 40GB
 
 【win】rancher-master-03
 OS Rocky Linux8
-vcpu 2
+vcpu 4
 memory 4096MB
 IP 192.168.0.153
 HDD 40GB
 
-【mac】rancher-worker-01
+# 【mac】rancher-worker-01
+# OS Rocky Linux8
+# vcpu 2
+# memory 2048MB
+# IP 192.168.0.154
+# HDD 40GB
+
+【win】rancher-worker-02
 OS Rocky Linux8
 vcpu 2
 memory 2048MB
-IP 192.168.0.154
+IP 192.168.0.155
+HDD 40GB
+
+【win】rancher-worker-03
+OS Rocky Linux8
+vcpu 2
+memory 2048MB
+IP 192.168.0.156
 HDD 40GB
 
 # vagrant構築
@@ -52,7 +66,7 @@ vagrant up
 ※vagrant up後、全てvagrant haltしてからVirtualBoxの設定→ネットワーク→アダプター2→アダプタータイプを「PCnet-FAST III (Am79C973)」へ変更して保存する。
 
 # 全vagrantの端末へvagrant shhで接続し、以下を設定する
-[tadanobu@MacBook-Pro ]$ vagrant ssh rancher-master-01
+[tadanobu@MacBook-Pro ]$ vagrant ssh rancher-master-03
 [rancher@rancher-master-01 ~]$ sudo passwd
 ※パスワードは以下
 ffff
@@ -64,6 +78,18 @@ PasswordAuthentication yes
 [root@rancher-master-01 rancher]# vi /etc/selinux/config
 # SELINUX=enforcing
 SELINUX=disabled
+[root@rancher-master-01 rancher]# vi /etc/rc.d/rc.local
+## ※ファイル末尾に以下を追記
+```
+echo -e "nameserver 192.168.0.150\nnameserver 8.8.8.8\nnameserver 8.8.4.4" > /etc/resolv.conf
+```
+[root@rancher-master-01 rancher]# chmod 744 /etc/rc.d/rc.local
+[root@rancher-master-01 rancher]# vi /etc/NetworkManager/NetworkManager.conf
+## ※以下のように[main]セクション以下へ「dns=none」を追記する
+```
+[main]
+dns=none
+```
 [root@rancher-master-01 rancher]# exit
 [rancher@rancher-master-01 ~]$ exit
 [tadanobu@MacBook-Pro ]$ vagrant halt rancher-master-01
@@ -203,8 +229,7 @@ search example.com
 ※エラーが出る場合は以下
 [root@rancher-master-01 ~]# dnf -y install docker-ce --allowerasing
 [root@rancher-master-01 ~]# docker -v
-[root@rancher-master-01 ~]# systemctl enable docker
-[root@rancher-master-01 ~]# systemctl start docker
+[root@rancher-master-01 ~]# systemctl enable docker; systemctl start docker
 [root@rancher-master-01 ~]# su vagrant
 [rancher@rancher-master-01 ~]$ sudo usermod -aG docker ${USER}
 [rancher@rancher-master-01 ~]$ exit
@@ -230,8 +255,10 @@ root@lb-0:~# cat ~/.ssh/id_rsa.pub
 ```
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC6oJjBl3Aei1x2+8dSfQZTiyG06VLcs2y/QVIMCIAMWG3h9MsBVwmEB2q4e0iOO2GYBYYOb37S5Mmtq7EslTcI9KT0h+2tyeIW/5gCzR4jeH/xoSJmQDAvbVMIbJ2OJv+qX4y7NtpIrV7hCZBG55/LHIn6tYAOCZhFI/HCkdywRuG184AOYDBGkH4odOE/Tiqn6+LjXrM6J4jvcHxAi4DwTXjlICHj0loPwwZOvNayCe61ROEqHVCV2S1zilWpxU0A1+p9+o06pGlgHIBYagnqB33joSZaCTjRqs3DK88InS8yYMXDIB51tpI326PtuqZ07G3Pn4aUp6R5/SJp55I7oCJfbMSWZewRL55WDV+gx0fVZdHXy/4lHk2CSSawngq3HPj+abp4zWEcR6mAPej89AOZ8LzkG66AGDfJ42jh8OqS1ib8R3oQmpPcdb3PF3X6N1zfhuqNhjAUpHAnymXcADZOKaznAg/+2soCit6muZ3spVwjaMV/7oBpTHh6enU= root@lb-01
 ```
-[root@rancher-master-02 vagrant]# chmod 700 ~/.ssh
-[root@rancher-master-02 vagrant]# chmod 600 ~/.ssh/authorized_keys 
+[root@rancher-master-02 vagrant]# chmod 700 ~/.ssh; chmod 600 ~/.ssh/authorized_keys 
+
+https://www.suse.com/suse-rancher/support-matrix/all-supported-versions/rancher-v2-6-0/
+
 
 # k8sクラスタファイル作成
 root@lb-0:~# vi rancher-cluster.yml
@@ -240,20 +267,24 @@ root@lb-0:~# vi rancher-cluster.yml
 nodes:
   - address: 192.168.0.151
     user: root
-    role: [controlplane, etcd]
+    role: [controlplane, etcd, worker]
     internal_address: 192.168.0.151
   - address: 192.168.0.152
     user: root
-    role: [controlplane, etcd]
+    role: [controlplane, etcd, worker]
     internal_address: 192.168.0.152
   - address: 192.168.0.153
     user: root
-    role: [controlplane, etcd]
+    role: [controlplane, etcd, worker]
     internal_address: 192.168.0.153
-  - address: 192.168.0.154
+  - address: 192.168.0.155
     user: root
     role: [worker]
-    internal_address: 192.168.0.154
+    internal_address: 192.168.0.155
+  - address: 192.168.0.156
+    user: root
+    role: [worker]
+    internal_address: 192.168.0.156
 
 services:
   etcd:
@@ -261,6 +292,8 @@ services:
     creation: 6h
     retention: 24h
 
+network:
+  plugin: calico
 # network:
 #   plugin: canal
 #   options:
@@ -277,31 +310,41 @@ ingress:
   provider: nginx
   options:
     use-forwarded-headers: "true"
+kubernetes_version: "v1.21.9-rancher1-1"
 ```
 
 root@lb-0:~# rke up --config rancher-cluster.yml
 
-# エラーの場合、またはクラスター作り直しの時
+## ※１）FATA[0218] Failed to get job complete status for job rke-ingress-controller-deploy-job in namespace kube-system
+## ※２）FATA[0546] [controlPlane] Failed to bring up Control Plane: [Failed to verify healthcheck: Service [kube-apiserver] is not healthy on host [192.168.0.153]. Response code: [403], response body: {"kind":"Status","apiVersion":"v1","metadata":{},"status":"Failure","message":"forbidden: User \"kube-apiserver\" cannot get path \"/healthz\"","reason":"Forbidden","details":{},"code":403}
+## ※３）FATA[0175] Failed to get job complete status for job rke-coredns-addon-deploy-job in namespace kube-system
+, log: I0313 01:17:47.077492       1 controller.go:611] quota admission added evaluator for: rolebindings.rbac.authorization.k8s.io]
+１ノードだけ有効にして他コメント化した状態でrancher-cluster.ymlを編集してからrke up --config rancher-cluster.ymを実行。その後１ノードずつ増やしつつrke up --config rancher-cluster.ymを実行するとうまくいったりする。
+また、rke up --config rancher-cluster.ymlをもう一度実行すると、何回かやっていると成功する場合がある。
+https://github.com/rancher/rke/issues/1461
+
+
+## ※エラーの場合、またはクラスター作り直しの時
 https://github.com/rancher/rke/issues/1835
 ```
 1.【スキップ】新しいservice-account-token-key.pemを生成します
 root@lb-0:~# openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./cluster_certs/kube-service-account-token-key.pem -out ./cluster_certs/kube-service-account-token.pem
 
 2.rkeクラスター削除
-root@lb-0:~# rke remove --config rancher-cluster.yml
-root@lb-0:~# rm -rf ~/.kube
+root@lb-0:~# rke remove --config rancher-cluster.yml; rm -rf ~/.kube
 
 3.すべてのDockerコンテナとkubernetes証明書をクリーンアップ
 # 全ノードで以下を実行
-[root@rancher-master-01 ~]# docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker rmi $(docker images -q); sudo rm -rf /etc/kubernetes; docker images; docker ps -a
-root@lb-0:~# rm -rf /etc/kubernetes
+root@lb-0:~# ssh root@192.168.0.151
+[root@rancher-master-01 ~]# docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker rmi $(docker images -q); docker volume rm $(docker volume ls -q); for mount in $(mount | grep tmpfs | grep '/var/lib/kubelet' | awk '{ print $3 }') /var/lib/kubelet /var/lib/rancher; do umount $mount; done; rm -rf /etc/ceph /etc/cni /etc/kubernetes /opt/cni /opt/rke /run/secrets/kubernetes.io /run/calico /run/flannel /var/lib/calico /var/lib/etcd /var/lib/cni /var/lib/kubelet /var/lib/rancher/rke/log /var/log/containers /var/log/pods /var/run/calico; docker images; docker ps -a; systemctl restart docker; shutdown now -r
+
+root@lb-0:~# for mount in $(mount | grep tmpfs | grep '/var/lib/kubelet' | awk '{ print $3 }') /var/lib/kubelet /var/lib/rancher; do umount $mount; done; rm -rf /etc/ceph /etc/cni /etc/kubernetes /opt/cni /opt/rke /run/secrets/kubernetes.io /run/calico /run/flannel /var/lib/calico /var/lib/etcd /var/lib/cni /var/lib/kubelet /var/lib/rancher/rke/log /var/log/containers /var/log/pods /var/run/calico
 
 4.【スキップ】rkeクラスタ作成
 rke up --config rancher-cluster.yml --custom-certs
 ```
 
-root@lb-0:~# mkdir ~/.kube
-root@lb-0:~# cp kube_config_rancher-cluster.yml ~/.kube/config
+root@lb-0:~# mkdir ~/.kube; cp kube_config_rancher-cluster.yml ~/.kube/config
 root@lb-0:~# cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -313,7 +356,8 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cl
 EOF
 root@lb-0:~# dnf repolist
 root@lb-0:~# dnf -y install kubelet kubeadm kubectl
-root@lb-0:~# kubectl get nodes
+root@lb-0:~# kubectl get nodes; kubectl get pods --all-namespaces
+https://kubernetes.io/ja/docs/reference/kubectl/cheatsheet/
 
 # lb-01へHelmのインストール
 root@lb-0:~# curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
@@ -322,22 +366,23 @@ root@lb-0:~# helm repo add stable https://charts.helm.sh/stable
 root@lb-0:~# helm repo update
 root@lb-0:~# helm repo list
 root@lb-0:~# helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
-root@lb-0:~# kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.4.4/cert-manager.crds.yaml
-root@lb-0:~# kubectl create namespace cert-manager
-root@lb-0:~# kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true 
+
+https://cert-manager.io/docs/installation/
+https://cert-manager.io/docs/installation/helm/
 root@lb-0:~# helm repo add jetstack https://charts.jetstack.io
 root@lb-0:~# helm repo update
 
 # cert-managerインストール
-root@lb-0:~# helm install cert-manager --namespace cert-manager --version v1.4.4 jetstack/cert-manager
+# root@lb-0:~# helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.7.1 --set installCRDs=true
+root@lb-0:~# helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.7.1 --set installCRDs=true --set webhook.timeoutSeconds=30
 NAME: cert-manager
-LAST DEPLOYED: Fri Mar  4 22:16:12 2022
+LAST DEPLOYED: Sat Mar 12 11:53:30 2022
 NAMESPACE: cert-manager
 STATUS: deployed
 REVISION: 1
 TEST SUITE: None
 NOTES:
-cert-manager has been deployed successfully!
+cert-manager v1.7.1 has been deployed successfully!
 
 In order to begin issuing certificates, you will need to set up a ClusterIssuer
 or Issuer resource (for example, by creating a 'letsencrypt-staging' issuer).
@@ -353,13 +398,38 @@ documentation:
 
 https://cert-manager.io/docs/usage/ingress/
 
+
+## ※エラーの場合
+E0312 18:33:06.996301    2619 reflector.go:138] k8s.io/client-go@v0.23.1/tools/cache/reflector.go:167: Failed to watch *unstructured.Unstructured: Get "https://192.168.0.151:6443/apis/batch/v1/namespaces/cert-manager/jobs?allowWatchBookmarks=true&fieldSelector=metadata.name%3Dcert-manager-startupapicheck&resourceVersion=6921&timeoutSeconds=565&watch=true": http2: client connection lost
+W0312 18:33:09.104210    2619 reflector.go:324] k8s.io/client-go@v0.23.1/tools/cache/reflector.go:167: failed to list *unstructured.Unstructured: Get "https://192.168.0.151:6443/apis/batch/v1/namespaces/cert-manager/jobs?fieldSelector=metadata.name%3Dcert-manager-startupapicheck&resourceVersion=6921": dial tcp 192.168.0.151:6443: connect: no route to host
+E0312 18:33:09.104287    2619 reflector.go:138] k8s.io/client-go@v0.23.1/tools/cache/reflector.go:167: Failed to watch *unstructured.Unstructured: failed to list *unstructured.Unstructured: Get "https://192.168.0.151:6443/apis/batch/v1/namespaces/cert-manager/jobs?fieldSelector=metadata.name%3Dcert-manager-startupapicheck&resourceVersion=6921": dial tcp 192.168.0.151:6443: connect: no route to host
+Error: INSTALLATION FAILED: failed post-install: timed out waiting for the condition
+[root@lb-01 ~]# helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.7.1 --set installCRDs=true
+Error: INSTALLATION FAILED: rendered manifests contain a resource that already exists. Unable to continue with install: could not get information about the resource ServiceAccount "cert-manager-cainjector" in namespace "cert-manager": etcdserver: request timed out
+[root@lb-01 ~]# helm uninstall cert-manager jetstack/cert-manager --namespace cert-manager
+Error: uninstall: Release not loaded: cert-manager: query: failed to query with labels: etcdserver: request timed out
+[root@lb-01 ~]# helm list
+Error: list: failed to list: etcdserver: request timed out
+
+## helmのcert-managerをアンインストールして、namespaceも消してからリトライする
+```
+[root@lb-01 ~]# helm uninstall cert-manager --namespace cert-manager
+[root@lb-01 ~]# kubectl delete namespace cert-manager
+[root@lb-01 ~]# kubectl get ns cert-manager -o json > tmp.json
+[root@lb-01 ~]# vi ./tmp.json
+[root@lb-01 ~]# curl -k -H "Content-Type: application/json" -X PUT --data-binary @tmp.json http://127.0.0.1:8001/api/v1/namespaces/cert-manager/finalize
+```
+
+root@lb-0:~# kubectl get pods --namespace cert-manager
+
 # rancherインストール
+https://www.rancher.co.jp/docs/rancher/v2.x/en/installation/ha/helm-rancher/
 root@lb-0:~# kubectl create namespace cattle-system
-root@lb-0:~# helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
-root@lb-0:~# helm install rancher rancher-latest/rancher --namespace cattle-system --set hostname=lb.example.com
-W0303 20:26:37.104897    8886 warnings.go:70] cert-manager.io/v1beta1 Issuer is deprecated in v1.4+, unavailable in v1.6+; use cert-manager.io/v1 Issuer
+root@lb-0:~# helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
+root@lb-0:~# helm install rancher rancher-stable/rancher --version=2.6 --namespace cattle-system --set hostname=lb.example.com
+# root@lb-0:~# helm install rancher rancher-stable/rancher --namespace cattle-system --set hostname=lb.example.com
 NAME: rancher
-LAST DEPLOYED: Thu Mar  3 20:26:36 2022
+LAST DEPLOYED: Sat Mar 12 19:11:57 2022
 NAMESPACE: cattle-system
 STATUS: deployed
 REVISION: 1
@@ -379,3 +449,50 @@ kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{
 ```
 Happy Containering!
 
+
+## ※ダメな場合
+Error: INSTALLATION FAILED: Internal error occurred: failed calling webhook "validate.nginx.ingress.kubernetes.io": Post "https://ingress-nginx-controller-admission.ingress-nginx.svc:443/networking/v1/ingresses?timeout=10s": x509: certificate signed by unknown authority
+Error: INSTALLATION FAILED: Internal error occurred: failed calling webhook "webhook.cert-manager.io": Post "https://cert-manager-webhook.cert-manager.svc:443/mutate?timeout=10s": context deadline exceeded
+
+[root@lb-01 ~]# helm uninstall rancher rancher-stable/rancher --namespace cattle-system
+W0313 18:06:19.316108    4751 warnings.go:70] policy/v1beta1 PodSecurityPolicy is deprecated in v1.21+, unavailable in v1.25+
+W0313 18:06:25.113995    4751 warnings.go:70] policy/v1beta1 PodSecurityPolicy is deprecated in v1.21+, unavailable in v1.25+
+
+[root@lb-01 ~]# kubectl delete namespace cattle-system
+[root@lb-01 ~]# kubectl get ns cattle-system -o json > tmp.json
+[root@lb-01 ~]# vi tmp.json
+[root@lb-01 ~]# curl -k -H "Content-Type: application/json" -X PUT --data-binary @tmp.json http://127.0.0.1:8001/api/v1/namespaces/cattle-system/finalize
+
+
+
+kubectl get pods --all-namespaces
+
+
+Rancherに初めてアクセスするようなので、起動時のパスワードを事前に設定している場合は、ここに入力してください。そうでなければ、ランダムなパスワードが生成されます。それを見つけるには
+
+docker run」インストールの場合。
+docker psでコンテナIDを検索し、実行します。
+docker logs  container-id  2>&1 | grep "Bootstrap Password:"
+を実行します。
+
+Helmインストールの場合、実行します。
+
+kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{.data.bootstrapPassword|base64decode}}{{"\n"}}'
+ を実行します。
+
+ng8c2sg9529mgfgcsw7k424b4sqxlv4ktf9vwqlxxjwtrpb4wbfdms
+ユーザID：admin
+パスワード：I0Fm9bI3gfqEdyIl
+
+kubectl get pods --all-namespaces
+kubectl -n cattle-system logs -f rancher-6bcbdd6cb7-trsd9
+kubectl exec -it rancher-6bcbdd6cb7-trsd9 /bin/bash -n cattle-system
+
+
+
+
+
+# 試したいこと
+・worker nodeの追加
+・PostgreSQL Operator
+・Longhorn
