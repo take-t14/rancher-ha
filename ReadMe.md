@@ -485,7 +485,6 @@ W0313 18:06:25.113995    4751 warnings.go:70] policy/v1beta1 PodSecurityPolicy i
 [root@lb-01 ~]# curl -k -H "Content-Type: application/json" -X PUT --data-binary @tmp.json http://127.0.0.1:8001/api/v1/namespaces/cattle-system/finalize
 
 
-
 kubectl get pods --all-namespaces
 
 
@@ -516,7 +515,7 @@ connection_pooler_max_db_connections: 60 → 5
 connection_pooler_number_of_instances: 2 → 1
 
 
-[root@lb-01 ~]# kubectl get pods --all-namespaces
+[root@lb-01 ~]# kubectl get pods -o wide --all-namespaces
 [root@lb-01 ~]# kubectl -n cattle-system logs -f rancher-6bcbdd6cb7-trsd9
 [root@lb-01 ~]# kubectl exec -it rancher-6bcbdd6cb7-trsd9 /bin/bash -n cattle-system
 
