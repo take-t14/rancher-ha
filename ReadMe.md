@@ -50,6 +50,13 @@ memory 2048MB
 IP 192.168.0.156
 HDD 40GB
 
+【rocky】rancher-master-04
+OS Rocky Linux8
+vcpu 4
+memory 4096MB
+IP 192.168.0.140
+HDD 40GB
+
 # vagrant構築
 vagrant plugin install vagrant-disksize
 vagrant plugin install vagrant-vbguest
@@ -118,6 +125,7 @@ stream {
         server 192.168.0.151:80 max_fails=3 fail_timeout=5s;
         server 192.168.0.152:80 max_fails=3 fail_timeout=5s;
         server 192.168.0.153:80 max_fails=3 fail_timeout=5s;
+        server 192.168.0.140:80 max_fails=3 fail_timeout=5s;
     }
     server {
         listen 80;
@@ -129,6 +137,7 @@ stream {
         server 192.168.0.151:443 max_fails=3 fail_timeout=5s;
         server 192.168.0.152:443 max_fails=3 fail_timeout=5s;
         server 192.168.0.153:443 max_fails=3 fail_timeout=5s;
+        server 192.168.0.140:443 max_fails=3 fail_timeout=5s;
     }
     server {
         listen     443;
@@ -201,10 +210,16 @@ lb  IN  A   192.168.0.150
 rancher-master-01   IN  A   192.168.0.151
 rancher-master-02   IN  A   192.168.0.152
 rancher-master-03   IN  A   192.168.0.153
+rancher-master-04   IN  A   192.168.0.140
 ```
 
 ### bind再起動
 [root@lb-01 vagrant]# systemctl enable --now named
+
+### mysql-syellインストール（mysqlテスト用）
+[root@lb-01 vagrant]# dnf localinstall https://dev.mysql.com/get/mysql80-community-release-el8-1.noarch.rpm
+[root@lb-01 vagrant]# rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+[root@lb-01 vagrant]# dnf install mysql-shell -y
 
 ### 全てのVMのDNSサーバをlb-0に設定（「rancher-〜」のVM全てに以下の設定をする）
 
@@ -239,6 +254,8 @@ search example.com
 [root@rancher-master-01 ~]# docker rm $(docker ps -q -a)
 [root@rancher-master-01 ~]# docker rmi $(docker images -q)
 [root@rancher-master-01 ~]# dnf -y install net-tools bind-utils
+※longhornの為にiscsi-initiator-utilsをインストール
+[root@rancher-master-01 ~]# dnf install -y iscsi-initiator-utils
 
 # rkeインストール
 root@lb-0:~# dnf -y install wget
@@ -277,6 +294,10 @@ nodes:
     user: root
     role: [controlplane, etcd, worker]
     internal_address: 192.168.0.153
+  - address: 192.168.0.140
+    user: root
+    role: [controlplane, etcd, worker]
+    internal_address: 192.168.0.140
   - address: 192.168.0.155
     user: root
     role: [worker]
@@ -482,15 +503,154 @@ kubectl get secret --namespace cattle-system bootstrap-secret -o go-template='{{
 
 ng8c2sg9529mgfgcsw7k424b4sqxlv4ktf9vwqlxxjwtrpb4wbfdms
 ユーザID：admin
-パスワード：I0Fm9bI3gfqEdyIl
+パスワード : I0Fm9bI3gfqEdyIl
 
-kubectl get pods --all-namespaces
-kubectl -n cattle-system logs -f rancher-6bcbdd6cb7-trsd9
-kubectl exec -it rancher-6bcbdd6cb7-trsd9 /bin/bash -n cattle-system
+longhorn:100.1.1+up1.2.3
+Longhorn Default Settings: OFF → ON
+Default Replica Count: 3 → 1
+Guaranteed Engine Manager CPU: 12 → 3
+Guaranteed Replica Manager CPU: 12 → 3
+
+postgres-operator:1.7.1
+connection_pooler_max_db_connections: 60 → 5
+connection_pooler_number_of_instances: 2 → 1
 
 
+[root@lb-01 ~]# kubectl get pods --all-namespaces
+[root@lb-01 ~]# kubectl -n cattle-system logs -f rancher-6bcbdd6cb7-trsd9
+[root@lb-01 ~]# kubectl exec -it rancher-6bcbdd6cb7-trsd9 /bin/bash -n cattle-system
+
+[root@lb-01 ~]# kubectl exec -it apache-php-799c6dc65f-d2qzr /bin/bash -n rancher-test-ns
+[root@lb-01 ~]# kubectl exec -it "mysql-operator-0" /busybox/sh -n rancher-test-ns
+kubectl get service mysql-operator -n rancher-test-ns
+kubectl describe service mysql-operator -n rancher-test-ns
+
+[root@lb-01 ~]# kubectl port-forward service/mysql-operator prometheus -n rancher-test-ns
+[root@lb-01 ~]# mysqlsh -h127.0.0.1 -P6446 -uroot -p
+
+[root@lb-01 ~]# kubectl exec -it `kubectl get pod -n rancher-test-ns | grep apache-php | awk -F " " '{print $1}'` /bin/bash -n rancher-test-ns  
+
+[root@lb-01 ~]# kubectl port-forward mysql-operator-0 3306:3306 -n rancher-test-ns
+
+## WinSCPで接続するためのトンネルコマンド（コマンドプロンプトで実行）
+ssh root@192.168.0.150 "kubectl port-forward `kubectl get pod -n rancher-test-ns | grep apache-php | awk '{print $1}'` 10022:22 -n rancher-test-ns"
+
+## MySQLで接続するためのトンネルコマンド（コマンドプロンプトで実行）
+ssh root@192.168.0.150 "kubectl port-forward service/mysql-operator prometheus -n rancher-test-ns"
+
+## kubernetesのpodログを確認
+[root@lb-01 ~]# kubectl logs apache-php-799c6dc65f-d2qzr -n rancher-test-ns | less
+
+## 1つのpodの状態詳細確認
+[root@lb-01 ~]# kubectl describe pods apache-php-799c6dc65f-d2qzr -n rancher-test-ns | less
+[root@lb-01 ~]# kubectl describe ingress apache-php-799c6dc65f-d2qzr -n rancher-test-ns
 
 
+postgres-operator作成
+Namespace：rancher-test-ns
+Name：laravel-ddd-sample-psql
+cluster_name_label：laravel-ddd-sample-psql
+
+postgres-operator-ui作成
+Namespace：rancher-test-ns
+Name：laravel-ddd-sample-psql-ui
+operatorClusterNameLabel：laravel-ddd-sample-psql
+envs>targetNamespace："*"
+ingress>enabled：true
+ingress>hosts>hosts：laravel-ddd-sample-psql-ui
+
+PostgreSQL Cluster作成
+Name：laravel-ddd-sample-psql
+Namespace：rancher-test-ns
+
+
+vi ./laravel-ddd-sample-psql-pv.yaml
+```
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: laravel-ddd-sample-psql-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: hostpath
+  hostPath:
+    path: /home
+```
+kubectl apply -f ./laravel-ddd-sample-psql-pv.yaml -n rancher-test-ns
+
+
+vi ./postgresql.yaml
+```
+kind: "postgresql"
+apiVersion: "acid.zalan.do/v1"
+
+metadata:
+  name: "acid-laravel-ddd-sample-psql9"
+  namespace: "rancher-test-ns"
+  labels:
+    team: acid
+
+spec:
+  teamId: "acid"
+  postgresql:
+    version: "14"
+  numberOfInstances: 1
+  enableMasterLoadBalancer: true
+  enableReplicaLoadBalancer: true
+  enableConnectionPooler: true
+  volume:
+    size: "10Gi"
+    storageClass: hostpath
+  users:
+    test_pg_user: []
+  databases:
+    test_db: test_pg_user
+  allowedSourceRanges:
+    # IP ranges to access your cluster go here
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 500m
+      memory: 500Mi
+```
+kubectl apply -f ./postgresql.yaml -n rancher-test-ns
+
+[root@lb-01 ~]# kubectl get pvc pgdata-acid-laravel-ddd-sample-psql4-0 -n rancher-test-ns -o yaml > ./postgres-operator-pvc.yaml
+[root@lb-01 ~]# vi ./postgres-operator-pvc.yaml
+※「  volumeMode: Filesystem」の下に以下を追記
+```
+  volumeName: laravel-ddd-sample-psql-pv
+```
+[root@lb-01 ~]# kubectl apply -f ./postgres-operator-pvc.yaml -n rancher-test-ns
+
+[root@lb-01 ~]# export PGMASTER=$(kubectl get pods -o jsonpath={.items..metadata.name} -l application=spilo -n rancher-test-ns); echo $PGMASTER
+[root@lb-01 ~]# kubectl get secret postgres.acid-laravel-ddd-sample-psql9.credentials.postgresql.acid.zalan.do -o 'jsonpath={.data.password}' -n rancher-test-ns | base64 -d
+postgres
+nIWj9fsnoFTANcH4bDRQgttvR6LmTYhEQyVJPkKcLRCZJkx2y8WR3LgkqEBrWZdh
+
+pooler
+VhUqrpTDV27mqfN2oqL8vCkrWm4obvkqRBndEEzcL1a9befnXmCJTgYQmeBe0Zak
+
+standby
+JWvbfx0ziGxLejv1YLpKj7xUuisKaXx5K6NeoLyBSF8KFSgbU3fLhlbeoua9tc85
+
+test_pg_user
+sQ3TZny3wkrl8J3udg0CZk8Lugqn9L3Q3GO8FfShbvqAwi2vgKxT1nH7hniBQMA5
+
+[root@lb-01 ~]# kubectl port-forward $PGMASTER 5432:5432 -n rancher-test-ns &
+[root@lb-01 ~]# psql -U postgres -h localhost -p 55432
+
+
+# Apps & Marketplaceで以下を追加
+Name:zalando-postgres-operator
+http Index URL:https://raw.githubusercontent.com/zalando/postgres-operator/master/charts/postgres-operator
 
 # 試したいこと
 ・worker nodeの追加
